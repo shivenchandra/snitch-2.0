@@ -1,0 +1,33 @@
+Topics required for project implementation and exam point of view:
+
+Core Components
+Core Tags like - View, Text, Image, ScrollView, TextInput and others
+React & App Fundamentals
+Components (Functional Components)
+State Management (useState, useEffect basics)
+Backend & Authentication
+Database using Firebase
+Authentication (Login / Signup)
+Navigation & Routing
+Expo Router
+Expo Navigation (React Navigation)
+Drawer Navigation
+Stack Screen
+Splash Screen
+SafeAreaView
+System Bars (StatusBar, NavigationBar)
+Storage & Data Handling
+AsyncStorage
+Secure Storage
+Networking
+API Integration (Fetch / Axios)
+Form Handling & Validation
+Animations (Animated API / Reanimated)
+Advanced State Management
+Context API
+Performance Optimization
+FlatList Optimization
+Memoization (React.memo, useCallback)
+
+
+Your project must contain these topics (not all) and also this is going to be helpful in exam
