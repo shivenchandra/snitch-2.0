@@ -17,7 +17,7 @@ export default function AddressesScreen() {
   const [addresses, setAddresses] = useState<Address[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
-  
+
   // Form state
   const [street, setStreet] = useState('');
   const [city, setCity] = useState('');
@@ -150,10 +150,10 @@ export default function AddressesScreen() {
             <ScrollView contentContainerStyle={styles.modalForm}>
               <Text style={styles.inputLabel}>Street Address</Text>
               <TextInput style={styles.input} value={street} onChangeText={setStreet} placeholder="123 Main St" />
-              
+
               <Text style={styles.inputLabel}>City</Text>
               <TextInput style={styles.input} value={city} onChangeText={setCity} placeholder="New York" />
-              
+
               <View style={styles.row}>
                 <View style={styles.halfInput}>
                   <Text style={styles.inputLabel}>State</Text>

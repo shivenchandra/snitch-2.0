@@ -98,12 +98,12 @@ export default function CheckoutScreen() {
       await placeOrder(cleanOrderData);
 
       Alert.alert('Order Placed! 🎉', `Total: ${formatPrice(total)}`, [
-        { 
-          text: 'OK', 
+        {
+          text: 'OK',
           onPress: () => {
             clearCart();
             router.replace('/(drawer)/orders');
-          } 
+          }
         },
       ]);
     } catch (error) {
@@ -149,10 +149,10 @@ export default function CheckoutScreen() {
                       onPress={() => setSelectedAddressId(addr.id)}
                     >
                       <View style={styles.cardHeader}>
-                        <Ionicons 
-                          name={selectedAddressId === addr.id ? "radio-button-on" : "radio-button-off"} 
-                          size={20} 
-                          color={selectedAddressId === addr.id ? Colors.textPrimary : Colors.textTertiary} 
+                        <Ionicons
+                          name={selectedAddressId === addr.id ? "radio-button-on" : "radio-button-off"}
+                          size={20}
+                          color={selectedAddressId === addr.id ? Colors.textPrimary : Colors.textTertiary}
                         />
                         <Text style={styles.cardBadge}>{addr.isDefault ? 'Default' : 'Other'}</Text>
                       </View>
@@ -185,10 +185,10 @@ export default function CheckoutScreen() {
                       onPress={() => setSelectedPaymentId(pay.id)}
                     >
                       <View style={styles.cardHeader}>
-                        <Ionicons 
-                          name={selectedPaymentId === pay.id ? "radio-button-on" : "radio-button-off"} 
-                          size={20} 
-                          color={selectedPaymentId === pay.id ? Colors.textPrimary : Colors.textTertiary} 
+                        <Ionicons
+                          name={selectedPaymentId === pay.id ? "radio-button-on" : "radio-button-off"}
+                          size={20}
+                          color={selectedPaymentId === pay.id ? Colors.textPrimary : Colors.textTertiary}
                         />
                         <Ionicons name="card" size={20} color={Colors.textSecondary} style={{ marginLeft: 8 }} />
                       </View>
@@ -222,8 +222,8 @@ export default function CheckoutScreen() {
 
           {/* Footer Footer */}
           <Animated.View entering={FadeInDown.delay(400).duration(400)} style={styles.footer}>
-            <Button 
-              title={`Place Order - ${formatPrice(total)}`} 
+            <Button
+              title={`Place Order - ${formatPrice(total)}`}
               onPress={handlePlaceOrder}
               disabled={items.length === 0 || !selectedAddressId || !selectedPaymentId}
             />

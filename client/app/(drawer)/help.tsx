@@ -53,7 +53,7 @@ export default function HelpScreen() {
         </View>
 
         <Text style={styles.sectionTitle}>Frequently Asked Questions</Text>
-        
+
         <View style={styles.faqList}>
           {FAQS.map((faq, index) => (
             <Animated.View key={index} style={styles.faqCard} entering={FadeInDown.delay(index * 100).duration(400)}>

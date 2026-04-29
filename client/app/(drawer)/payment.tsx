@@ -17,7 +17,7 @@ export default function PaymentMethodsScreen() {
   const [payments, setPayments] = useState<PaymentMethod[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
-  
+
   // Form state
   const [cardNumber, setCardNumber] = useState('');
   const [expiry, setExpiry] = useState('');
@@ -154,7 +154,7 @@ export default function PaymentMethodsScreen() {
             <ScrollView contentContainerStyle={styles.modalForm}>
               <Text style={styles.inputLabel}>Card Number</Text>
               <TextInput style={styles.input} value={cardNumber} onChangeText={setCardNumber} placeholder="1234 5678 9101 1121" keyboardType="numeric" maxLength={16} />
-              
+
               <View style={styles.row}>
                 <View style={styles.halfInput}>
                   <Text style={styles.inputLabel}>Expiry Date</Text>

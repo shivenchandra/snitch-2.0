@@ -54,8 +54,8 @@ export default function OrdersScreen() {
   const handleCancelOrder = useCallback((orderId: string) => {
     Alert.alert('Cancel Order', 'Are you sure you want to cancel this order?', [
       { text: 'No', style: 'cancel' },
-      { 
-        text: 'Yes, Cancel', 
+      {
+        text: 'Yes, Cancel',
         style: 'destructive',
         onPress: async () => {
           setLoading(true);
@@ -129,7 +129,7 @@ export default function OrdersScreen() {
                 </TouchableOpacity>
               </View>
             </View>
-            
+
             {/* Expanded Item Details */}
             {expandedOrderId === item.id && (
               <View style={styles.expandedContainer}>
@@ -148,7 +148,7 @@ export default function OrdersScreen() {
                     </View>
                   </View>
                 ))}
-                
+
                 {/* Shipping & Payment Details */}
                 {(item.shippingAddress || item.paymentMethod) && (
                   <View style={styles.orderMetaBox}>
