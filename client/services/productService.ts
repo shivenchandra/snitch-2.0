@@ -1,8 +1,3 @@
-// ==========================================
-// Snitch 2.0 — Firestore Product Service
-// CRUD operations for products
-// ==========================================
-
 import {
   collection,
   getDocs,
@@ -17,10 +12,7 @@ import {
 } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import { Product } from '../types';
-
 const PRODUCTS_COLLECTION = 'products';
-
-// Fetch all products from Firestore
 export const fetchProductsFromDB = async (category?: string): Promise<Product[]> => {
   try {
     let q;
@@ -33,7 +25,6 @@ export const fetchProductsFromDB = async (category?: string): Promise<Product[]>
     } else {
       q = query(collection(db, PRODUCTS_COLLECTION), orderBy('createdAt', 'desc'));
     }
-
     const snapshot = await getDocs(q);
     return snapshot.docs.map(doc => ({
       id: doc.id,
@@ -44,8 +35,6 @@ export const fetchProductsFromDB = async (category?: string): Promise<Product[]>
     return [];
   }
 };
-
-// Add a new product to Firestore
 export const addProductToDB = async (product: Omit<Product, 'id'>): Promise<string> => {
   try {
     const docRef = await addDoc(collection(db, PRODUCTS_COLLECTION), {
@@ -58,8 +47,6 @@ export const addProductToDB = async (product: Omit<Product, 'id'>): Promise<stri
     throw error;
   }
 };
-
-// Update an existing product
 export const updateProductInDB = async (id: string, data: Partial<Product>): Promise<void> => {
   try {
     const docRef = doc(db, PRODUCTS_COLLECTION, id);
@@ -69,8 +56,6 @@ export const updateProductInDB = async (id: string, data: Partial<Product>): Pro
     throw error;
   }
 };
-
-// Delete a product
 export const deleteProductFromDB = async (id: string): Promise<void> => {
   try {
     await deleteDoc(doc(db, PRODUCTS_COLLECTION, id));
@@ -79,8 +64,6 @@ export const deleteProductFromDB = async (id: string): Promise<void> => {
     throw error;
   }
 };
-
-// Seed mock data to Firestore (one-time use)
 export const seedProducts = async (products: Omit<Product, 'id'>[]): Promise<void> => {
   try {
     for (const product of products) {

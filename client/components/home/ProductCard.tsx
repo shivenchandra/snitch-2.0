@@ -1,36 +1,25 @@
-// ==========================================
-// Snitch 2.0 — Product Card (Memoized)
-// React.memo for FlatList optimization
-// ==========================================
-
 import React, { useCallback } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, Dimensions } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Product } from '../../types';
 import { useCurrency } from '../../context/CurrencyContext';
 import Colors from '../../constants/colors';
-
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const CARD_WIDTH = (SCREEN_WIDTH - 48) / 2;
-
 interface ProductCardProps {
   product: Product;
   onPress: (product: Product) => void;
 }
-
 const ProductCard: React.FC<ProductCardProps> = React.memo(
   ({ product, onPress }) => {
     const [isFavorite, setIsFavorite] = React.useState(false);
     const { formatPrice } = useCurrency();
-
     const handleFavorite = useCallback(() => {
       setIsFavorite(prev => !prev);
     }, []);
-
     const handlePress = useCallback(() => {
       onPress(product);
     }, [product, onPress]);
-
     return (
       <TouchableOpacity style={styles.card} onPress={handlePress} activeOpacity={0.9}>
         <View style={styles.imageContainer}>
@@ -59,7 +48,6 @@ const ProductCard: React.FC<ProductCardProps> = React.memo(
   },
   (prevProps, nextProps) => prevProps.product.id === nextProps.product.id
 );
-
 const styles = StyleSheet.create({
   card: { width: CARD_WIDTH, marginBottom: 16, borderRadius: 16, backgroundColor: Colors.surface, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.06, shadowRadius: 12, elevation: 3 },
   imageContainer: { width: '100%', height: CARD_WIDTH * 1.2, borderTopLeftRadius: 16, borderTopRightRadius: 16, overflow: 'hidden', backgroundColor: Colors.surfaceLight },
@@ -75,5 +63,4 @@ const styles = StyleSheet.create({
   price: { fontSize: 15, fontWeight: '700', color: Colors.textPrimary },
   originalPrice: { fontSize: 13, color: Colors.textTertiary, textDecorationLine: 'line-through' },
 });
-
 export default ProductCard;

@@ -1,8 +1,3 @@
-// ==========================================
-// Snitch 2.0 — Category Grid
-// Horizontal scrollable category icons
-// ==========================================
-
 import React from 'react';
 import {
   View,
@@ -14,12 +9,10 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { CATEGORIES } from '../../constants/products';
 import Colors from '../../constants/colors';
-
 interface CategoryGridProps {
   activeCategory: string | null;
   onSelectCategory: (categoryName: string) => void;
 }
-
 const CategoryGrid: React.FC<CategoryGridProps> = ({ activeCategory, onSelectCategory }) => {
   return (
     <View style={styles.container}>
@@ -57,7 +50,6 @@ const CategoryGrid: React.FC<CategoryGridProps> = ({ activeCategory, onSelectCat
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     marginBottom: 24,
@@ -98,5 +90,4 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
 });
-
 export default CategoryGrid;

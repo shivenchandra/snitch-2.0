@@ -1,25 +1,15 @@
-// ==========================================
-// Snitch 2.0 — Currency Context
-// Switch between INR (₹) and USD ($)
-// Prices stored in INR as base currency
-// ==========================================
-
 import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
 import { storeData, getData } from '../utils/storage';
-
 type CurrencyCode = 'USD' | 'INR';
-
 interface CurrencyInfo {
   code: CurrencyCode;
   symbol: string;
-  rate: number; // conversion rate from INR
+  rate: number; 
 }
-
 const CURRENCIES: Record<CurrencyCode, CurrencyInfo> = {
   INR: { code: 'INR', symbol: '₹', rate: 1 },
-  USD: { code: 'USD', symbol: '$', rate: 0.012 }, // ~0.012 USD per INR
+  USD: { code: 'USD', symbol: '$', rate: 0.012 }, 
 };
-
 interface CurrencyContextType {
   currency: CurrencyInfo;
   currencyCode: CurrencyCode;
@@ -27,15 +17,10 @@ interface CurrencyContextType {
   formatPrice: (priceInINR: number) => string;
   convertPrice: (priceInINR: number) => number;
 }
-
 const STORAGE_KEY = '@snitch_currency';
-
 const CurrencyContext = createContext<CurrencyContextType | undefined>(undefined);
-
 export const CurrencyProvider = ({ children }: { children: ReactNode }) => {
   const [currencyCode, setCurrencyCode] = useState<CurrencyCode>('INR');
-
-  // Load saved currency preference
   useEffect(() => {
     const load = async () => {
       const saved = await getData<CurrencyCode>(STORAGE_KEY);
@@ -45,36 +30,30 @@ export const CurrencyProvider = ({ children }: { children: ReactNode }) => {
     };
     load();
   }, []);
-
   const setCurrency = useCallback((code: CurrencyCode) => {
     setCurrencyCode(code);
     storeData(STORAGE_KEY, code);
   }, []);
-
   const convertPrice = useCallback(
     (priceInINR: number): number => {
       return priceInINR * CURRENCIES[currencyCode].rate;
     },
     [currencyCode]
   );
-
   const formatPrice = useCallback(
     (priceInINR: number): string => {
       const converted = priceInINR * CURRENCIES[currencyCode].rate;
       const symbol = CURRENCIES[currencyCode].symbol;
-
       if (currencyCode === 'INR') {
         return `${symbol}${converted.toLocaleString('en-IN', {
           minimumFractionDigits: 0,
           maximumFractionDigits: 0,
         })}`;
       }
-
       return `${symbol}${converted.toFixed(2)}`;
     },
     [currencyCode]
   );
-
   return (
     <CurrencyContext.Provider
       value={{
@@ -89,7 +68,6 @@ export const CurrencyProvider = ({ children }: { children: ReactNode }) => {
     </CurrencyContext.Provider>
   );
 };
-
 export const useCurrency = (): CurrencyContextType => {
   const context = useContext(CurrencyContext);
   if (!context) {
@@ -97,5 +75,4 @@ export const useCurrency = (): CurrencyContextType => {
   }
   return context;
 };
-
 export default CurrencyContext;

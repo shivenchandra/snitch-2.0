@@ -1,10 +1,5 @@
-// ==========================================
-// Snitch 2.0 — Auth Stack Layout
-// ==========================================
-
 import React from 'react';
 import { Stack } from 'expo-router';
-
 export default function AuthLayout() {
   return (
     <Stack

@@ -1,10 +1,4 @@
-// ==========================================
-// Snitch 2.0 — Mock Product Data
-// All prices in INR (₹), under ₹5000
-// ==========================================
-
 import { Product, Category, BannerSlide } from '../types';
-
 export const CATEGORIES: Category[] = [
   { id: '1', name: 'Clothing', icon: 'shirt-outline' },
   { id: '2', name: 'Shoes', icon: 'footsteps-outline' },
@@ -13,7 +7,6 @@ export const CATEGORIES: Category[] = [
   { id: '5', name: 'Watches', icon: 'watch-outline' },
   { id: '6', name: 'Sunglasses', icon: 'glasses-outline' },
 ];
-
 export const BANNER_SLIDES: BannerSlide[] = [
   {
     id: '1',
@@ -40,7 +33,6 @@ export const BANNER_SLIDES: BannerSlide[] = [
     backgroundColor: '#FFF3E0',
   },
 ];
-
 export const PRODUCTS: Product[] = [
   {
     id: '1',
@@ -230,5 +222,4 @@ export const PRODUCTS: Product[] = [
     isNew: true,
   },
 ];
-
 export default PRODUCTS;

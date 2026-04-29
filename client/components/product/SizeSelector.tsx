@@ -1,17 +1,11 @@
-// ==========================================
-// Snitch 2.0 — Size Selector
-// ==========================================
-
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Colors from '../../constants/colors';
-
 interface SizeSelectorProps {
   sizes: string[];
   selectedSize: string;
   onSelect: (size: string) => void;
 }
-
 const SizeSelector: React.FC<SizeSelectorProps> = ({
   sizes,
   selectedSize,
@@ -45,7 +39,6 @@ const SizeSelector: React.FC<SizeSelectorProps> = ({
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     marginBottom: 20,
@@ -84,5 +77,4 @@ const styles = StyleSheet.create({
     color: Colors.textWhite,
   },
 });
-
 export default SizeSelector;

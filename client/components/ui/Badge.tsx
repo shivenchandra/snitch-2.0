@@ -1,20 +1,13 @@
-// ==========================================
-// Snitch 2.0 — Badge Component
-// ==========================================
-
 import React from 'react';
 import { View, Text, StyleSheet, ViewStyle } from 'react-native';
 import Colors from '../../constants/colors';
-
 interface BadgeProps {
   count: number;
   size?: 'small' | 'medium';
   style?: ViewStyle;
 }
-
 const Badge: React.FC<BadgeProps> = ({ count, size = 'small', style }) => {
   if (count <= 0) return null;
-
   return (
     <View style={[styles.badge, styles[size], style]}>
       <Text style={[styles.text, size === 'small' ? styles.textSmall : styles.textMedium]}>
@@ -23,7 +16,6 @@ const Badge: React.FC<BadgeProps> = ({ count, size = 'small', style }) => {
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   badge: {
     backgroundColor: Colors.textPrimary,
@@ -58,5 +50,4 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
 });
-
 export default Badge;

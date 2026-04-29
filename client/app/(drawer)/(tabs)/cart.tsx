@@ -1,4 +1,3 @@
-// Snitch 2.0 — Cart Screen
 import React, { useCallback } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -10,12 +9,10 @@ import { useCart } from '../../../context/CartContext';
 import { useCurrency } from '../../../context/CurrencyContext';
 import { CartItem } from '../../../types';
 import Colors from '../../../constants/colors';
-
 export default function CartScreen() {
   const { items, getSubtotal, getItemCount, clearCart } = useCart();
   const { formatPrice } = useCurrency();
   const subtotal = getSubtotal();
-
   const handleCheckout = useCallback(() => {
     if (items.length === 0) {
       Alert.alert('Cart Empty', 'Add some items first!');
@@ -25,7 +22,6 @@ export default function CartScreen() {
       { text: 'OK', onPress: () => clearCart() },
     ]);
   }, [items, subtotal, clearCart, formatPrice]);
-
   const renderCartItem = useCallback(
     ({ item, index }: { item: CartItem; index: number }) => (
       <Animated.View entering={FadeInDown.delay(index * 80).duration(400)}>
@@ -34,12 +30,10 @@ export default function CartScreen() {
     ),
     []
   );
-
   const keyExtractor = useCallback(
     (item: CartItem) => `${item.product.id}-${item.selectedSize}-${item.selectedColor.name}`,
     []
   );
-
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <View style={styles.header}>
@@ -73,7 +67,6 @@ export default function CartScreen() {
     </SafeAreaView>
   );
 }
-
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: Colors.surfaceLight },
   header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 16, paddingVertical: 12, backgroundColor: Colors.surface },

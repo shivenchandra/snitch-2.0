@@ -1,4 +1,3 @@
-// Snitch 2.0 — Cart Item Component
 import React, { useCallback } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
@@ -6,27 +5,21 @@ import { CartItem as CartItemType } from '../../types';
 import { useCart } from '../../context/CartContext';
 import { useCurrency } from '../../context/CurrencyContext';
 import Colors from '../../constants/colors';
-
 interface CartItemProps {
   item: CartItemType;
 }
-
 const CartItem: React.FC<CartItemProps> = React.memo(({ item }) => {
   const { updateQuantity, removeFromCart } = useCart();
   const { formatPrice } = useCurrency();
-
   const handleIncrement = useCallback(() => {
     updateQuantity(item.product.id, item.quantity + 1);
   }, [item.product.id, item.quantity, updateQuantity]);
-
   const handleDecrement = useCallback(() => {
     updateQuantity(item.product.id, item.quantity - 1);
   }, [item.product.id, item.quantity, updateQuantity]);
-
   const handleRemove = useCallback(() => {
     removeFromCart(item.product.id);
   }, [item.product.id, removeFromCart]);
-
   return (
     <View style={styles.container}>
       <Image source={{ uri: item.product.image }} style={styles.image} resizeMode="cover" />
@@ -61,7 +54,6 @@ const CartItem: React.FC<CartItemProps> = React.memo(({ item }) => {
     </View>
   );
 });
-
 const styles = StyleSheet.create({
   container: { flexDirection: 'row', backgroundColor: Colors.surface, borderRadius: 16, padding: 12, marginBottom: 12, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.05, shadowRadius: 8, elevation: 2 },
   image: { width: 80, height: 90, borderRadius: 12, backgroundColor: Colors.surfaceLight },
@@ -79,5 +71,4 @@ const styles = StyleSheet.create({
   quantityButtonText: { fontSize: 18, fontWeight: '600', color: Colors.textPrimary },
   quantity: { fontSize: 15, fontWeight: '600', color: Colors.textPrimary, minWidth: 24, textAlign: 'center' },
 });
-
 export default CartItem;

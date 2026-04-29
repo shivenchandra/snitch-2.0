@@ -1,8 +1,3 @@
-// ==========================================
-// Snitch 2.0 — Signup Screen
-// Firebase Auth + Form Validation
-// ==========================================
-
 import React, { useState, useCallback } from 'react';
 import {
   View,
@@ -27,7 +22,6 @@ import {
   validateConfirmPassword,
 } from '../../utils/validation';
 import Colors from '../../constants/colors';
-
 export default function SignupScreen() {
   const { signup, isLoading, error, clearError } = useAuth();
   const [name, setName] = useState('');
@@ -40,14 +34,12 @@ export default function SignupScreen() {
     password?: string;
     confirmPassword?: string;
   }>({});
-
   const handleSignup = useCallback(async () => {
     clearError();
     const nameResult = validateName(name);
     const emailResult = validateEmail(email);
     const passwordResult = validatePassword(password);
     const confirmResult = validateConfirmPassword(password, confirmPassword);
-
     if (
       !nameResult.isValid ||
       !emailResult.isValid ||
@@ -62,7 +54,6 @@ export default function SignupScreen() {
       });
       return;
     }
-
     setErrors({});
     try {
       await signup(email, password, name);
@@ -71,7 +62,6 @@ export default function SignupScreen() {
       Alert.alert('Signup Failed', err.message || 'Please try again');
     }
   }, [name, email, password, confirmPassword, signup, clearError]);
-
   return (
     <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView
@@ -83,7 +73,7 @@ export default function SignupScreen() {
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
         >
-          {/* Header */}
+          {}
           <Animated.View entering={FadeInUp.delay(100).duration(600)} style={styles.header}>
             <TouchableOpacity
               onPress={() => router.back()}
@@ -92,15 +82,13 @@ export default function SignupScreen() {
               <Text style={styles.backArrow}>←</Text>
             </TouchableOpacity>
           </Animated.View>
-
           <Animated.View entering={FadeInUp.delay(200).duration(600)}>
             <Text style={styles.title}>Create account</Text>
             <Text style={styles.subtitle}>
               Join Snitch and discover the latest fashion trends
             </Text>
           </Animated.View>
-
-          {/* Form */}
+          {}
           <Animated.View entering={FadeInDown.delay(300).duration(600)} style={styles.form}>
             <Input
               label="Full Name"
@@ -111,7 +99,6 @@ export default function SignupScreen() {
               onChangeText={setName}
               error={errors.name}
             />
-
             <Input
               label="Email"
               placeholder="Enter your email"
@@ -122,7 +109,6 @@ export default function SignupScreen() {
               onChangeText={setEmail}
               error={errors.email}
             />
-
             <Input
               label="Password"
               placeholder="Create a password"
@@ -132,7 +118,6 @@ export default function SignupScreen() {
               onChangeText={setPassword}
               error={errors.password}
             />
-
             <Input
               label="Confirm Password"
               placeholder="Confirm your password"
@@ -142,9 +127,7 @@ export default function SignupScreen() {
               onChangeText={setConfirmPassword}
               error={errors.confirmPassword}
             />
-
             {error && <Text style={styles.errorText}>{error}</Text>}
-
             <Button
               title="Create Account"
               onPress={handleSignup}
@@ -153,8 +136,7 @@ export default function SignupScreen() {
               style={styles.signupButton}
             />
           </Animated.View>
-
-          {/* Footer */}
+          {}
           <Animated.View entering={FadeInDown.delay(500).duration(600)} style={styles.footer}>
             <View style={styles.loginRow}>
               <Text style={styles.loginText}>Already have an account? </Text>
@@ -168,7 +150,6 @@ export default function SignupScreen() {
     </SafeAreaView>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,

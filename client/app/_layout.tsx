@@ -1,8 +1,3 @@
-// ==========================================
-// Snitch 2.0 — Root Layout
-// Stack Navigation + Providers + Splash Screen
-// ==========================================
-
 import React, { useEffect } from 'react';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
@@ -13,19 +8,14 @@ import { AuthProvider } from '../context/AuthContext';
 import { CartProvider } from '../context/CartContext';
 import { ThemeProvider } from '../context/ThemeContext';
 import { CurrencyProvider } from '../context/CurrencyContext';
-
-// Prevent splash screen from auto-hiding
 SplashScreen.preventAutoHideAsync();
-
 export default function RootLayout() {
   useEffect(() => {
-    // Hide splash screen after a short delay
     const timer = setTimeout(() => {
       SplashScreen.hideAsync();
     }, 1000);
     return () => clearTimeout(timer);
   }, []);
-
   return (
     <GestureHandlerRootView style={styles.container}>
       <ThemeProvider>
@@ -64,7 +54,6 @@ export default function RootLayout() {
     </GestureHandlerRootView>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,

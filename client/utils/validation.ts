@@ -1,12 +1,7 @@
-// ==========================================
-// Snitch 2.0 — Form Validation Utilities
-// ==========================================
-
 export interface ValidationResult {
   isValid: boolean;
   error?: string;
 }
-
 export const validateEmail = (email: string): ValidationResult => {
   if (!email.trim()) {
     return { isValid: false, error: 'Email is required' };
@@ -17,7 +12,6 @@ export const validateEmail = (email: string): ValidationResult => {
   }
   return { isValid: true };
 };
-
 export const validatePassword = (password: string): ValidationResult => {
   if (!password) {
     return { isValid: false, error: 'Password is required' };
@@ -27,7 +21,6 @@ export const validatePassword = (password: string): ValidationResult => {
   }
   return { isValid: true };
 };
-
 export const validateName = (name: string): ValidationResult => {
   if (!name.trim()) {
     return { isValid: false, error: 'Name is required' };
@@ -37,7 +30,6 @@ export const validateName = (name: string): ValidationResult => {
   }
   return { isValid: true };
 };
-
 export const validateConfirmPassword = (
   password: string,
   confirmPassword: string

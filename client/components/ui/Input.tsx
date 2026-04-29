@@ -1,8 +1,3 @@
-// ==========================================
-// Snitch 2.0 — Custom Input Component
-// Form handling with validation
-// ==========================================
-
 import React, { useState } from 'react';
 import {
   View,
@@ -14,14 +9,12 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import Colors from '../../constants/colors';
-
 interface InputProps extends TextInputProps {
   label?: string;
   error?: string;
   icon?: keyof typeof Ionicons.glyphMap;
   isPassword?: boolean;
 }
-
 const Input: React.FC<InputProps> = ({
   label,
   error,
@@ -32,7 +25,6 @@ const Input: React.FC<InputProps> = ({
 }) => {
   const [isFocused, setIsFocused] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-
   return (
     <View style={styles.container}>
       {label && <Text style={styles.label}>{label}</Text>}
@@ -76,7 +68,6 @@ const Input: React.FC<InputProps> = ({
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     marginBottom: 16,
@@ -122,5 +113,4 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
 });
-
 export default Input;

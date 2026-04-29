@@ -1,8 +1,3 @@
-// ==========================================
-// Snitch 2.0 — Admin Dashboard
-// Add, view, and delete products via Firestore
-// ==========================================
-
 import React, { useState, useEffect, useCallback } from 'react';
 import {
   View,
@@ -31,17 +26,13 @@ import { PRODUCTS } from '../../constants/products';
 import { Product } from '../../types';
 import Colors from '../../constants/colors';
 import { useCurrency } from '../../context/CurrencyContext';
-
 type Tab = 'products' | 'add';
-
 export default function AdminScreen() {
   const [activeTab, setActiveTab] = useState<Tab>('products');
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const { formatPrice } = useCurrency();
-
-  // Form state
   const [name, setName] = useState('');
   const [price, setPrice] = useState('');
   const [originalPrice, setOriginalPrice] = useState('');
@@ -52,10 +43,7 @@ export default function AdminScreen() {
   const [sizes, setSizes] = useState('S, M, L, XL');
   const [isSale, setIsSale] = useState(false);
   const [isNew, setIsNew] = useState(false);
-
   const categories = ['Clothing', 'Shoes', 'Bags', 'Hats', 'Watches', 'Sunglasses'];
-
-  // Load products
   const loadProducts = useCallback(async () => {
     setLoading(true);
     try {
@@ -67,12 +55,9 @@ export default function AdminScreen() {
       setLoading(false);
     }
   }, []);
-
   useEffect(() => {
     loadProducts();
   }, [loadProducts]);
-
-  // Seed mock data to Firestore
   const handleSeedData = useCallback(async () => {
     Alert.alert(
       'Seed Products',
@@ -98,14 +83,11 @@ export default function AdminScreen() {
       ]
     );
   }, [loadProducts]);
-
-  // Add product
   const handleAddProduct = useCallback(async () => {
     if (!name.trim() || !price.trim() || !description.trim()) {
       Alert.alert('Missing Fields', 'Please fill in name, price, and description');
       return;
     }
-
     setSaving(true);
     try {
       const sizeArray = sizes.split(',').map(s => s.trim()).filter(Boolean);
@@ -123,11 +105,8 @@ export default function AdminScreen() {
         isNew: isNew,
         rating: 4.5,
       };
-
       await addProductToDB(newProduct);
       Alert.alert('Success! 🎉', `"${name}" has been added.`);
-
-      // Reset form
       setName('');
       setPrice('');
       setOriginalPrice('');
@@ -137,8 +116,6 @@ export default function AdminScreen() {
       setSizes('S, M, L, XL');
       setIsSale(false);
       setIsNew(false);
-
-      // Switch to products tab and refresh
       setActiveTab('products');
       await loadProducts();
     } catch (err) {
@@ -147,8 +124,6 @@ export default function AdminScreen() {
       setSaving(false);
     }
   }, [name, price, originalPrice, description, category, imageUrl, material, sizes, isSale, isNew, loadProducts]);
-
-  // Delete product
   const handleDelete = useCallback(
     (product: Product) => {
       Alert.alert('Delete Product', `Delete "${product.name}"?`, [
@@ -169,8 +144,6 @@ export default function AdminScreen() {
     },
     [loadProducts]
   );
-
-  // Render product item in admin list
   const renderProductItem = useCallback(
     ({ item }: { item: Product }) => (
       <View style={styles.productItem}>
@@ -187,10 +160,9 @@ export default function AdminScreen() {
     ),
     [handleDelete, formatPrice]
   );
-
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
-      {/* Header */}
+      {}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
           <Ionicons name="arrow-back" size={24} color={Colors.textPrimary} />
@@ -200,8 +172,7 @@ export default function AdminScreen() {
           <Ionicons name="cloud-upload-outline" size={20} color={Colors.textPrimary} />
         </TouchableOpacity>
       </View>
-
-      {/* Tabs */}
+      {}
       <View style={styles.tabRow}>
         <TouchableOpacity
           style={[styles.tab, activeTab === 'products' && styles.tabActive]}
@@ -220,8 +191,7 @@ export default function AdminScreen() {
           <Text style={[styles.tabText, activeTab === 'add' && styles.tabTextActive]}>Add Product</Text>
         </TouchableOpacity>
       </View>
-
-      {/* Tab Content */}
+      {}
       {activeTab === 'products' ? (
         loading ? (
           <View style={styles.loadingContainer}>
@@ -246,11 +216,10 @@ export default function AdminScreen() {
       ) : (
         <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1 }}>
           <ScrollView contentContainerStyle={styles.formContent} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
-            {/* Product Name */}
+            {}
             <Text style={styles.label}>Product Name *</Text>
             <TextInput style={styles.input} placeholder="e.g. Classic Black T-shirt" placeholderTextColor={Colors.textTertiary} value={name} onChangeText={setName} />
-
-            {/* Price Row */}
+            {}
             <View style={styles.row}>
               <View style={styles.halfField}>
                 <Text style={styles.label}>Price (₹) *</Text>
@@ -261,12 +230,10 @@ export default function AdminScreen() {
                 <TextInput style={styles.input} placeholder="1799" placeholderTextColor={Colors.textTertiary} keyboardType="numeric" value={originalPrice} onChangeText={setOriginalPrice} />
               </View>
             </View>
-
-            {/* Description */}
+            {}
             <Text style={styles.label}>Description *</Text>
             <TextInput style={[styles.input, styles.textArea]} placeholder="Product description..." placeholderTextColor={Colors.textTertiary} multiline numberOfLines={3} value={description} onChangeText={setDescription} />
-
-            {/* Category */}
+            {}
             <Text style={styles.label}>Category</Text>
             <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.categoryScroll}>
               {categories.map(cat => (
@@ -279,20 +246,16 @@ export default function AdminScreen() {
                 </TouchableOpacity>
               ))}
             </ScrollView>
-
-            {/* Image URL */}
+            {}
             <Text style={styles.label}>Image URL</Text>
             <TextInput style={styles.input} placeholder="https://..." placeholderTextColor={Colors.textTertiary} value={imageUrl} onChangeText={setImageUrl} autoCapitalize="none" />
-
-            {/* Material */}
+            {}
             <Text style={styles.label}>Material</Text>
             <TextInput style={styles.input} placeholder="e.g. Cotton, Polyester" placeholderTextColor={Colors.textTertiary} value={material} onChangeText={setMaterial} />
-
-            {/* Sizes */}
+            {}
             <Text style={styles.label}>Sizes (comma separated)</Text>
             <TextInput style={styles.input} placeholder="S, M, L, XL" placeholderTextColor={Colors.textTertiary} value={sizes} onChangeText={setSizes} />
-
-            {/* Toggles */}
+            {}
             <View style={styles.toggleRow}>
               <TouchableOpacity style={[styles.toggleBtn, isSale && styles.toggleActive]} onPress={() => setIsSale(!isSale)}>
                 <Text style={[styles.toggleText, isSale && styles.toggleTextActive]}>🏷️ On Sale</Text>
@@ -301,8 +264,7 @@ export default function AdminScreen() {
                 <Text style={[styles.toggleText, isNew && styles.toggleTextActive]}>✨ New Arrival</Text>
               </TouchableOpacity>
             </View>
-
-            {/* Submit */}
+            {}
             <TouchableOpacity style={styles.submitBtn} onPress={handleAddProduct} disabled={saving} activeOpacity={0.9}>
               {saving ? (
                 <ActivityIndicator color={Colors.textWhite} />
@@ -316,7 +278,6 @@ export default function AdminScreen() {
     </SafeAreaView>
   );
 }
-
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: Colors.surface },
   header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16, paddingVertical: 12 },

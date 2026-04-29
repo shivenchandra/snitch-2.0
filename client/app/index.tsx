@@ -1,17 +1,10 @@
-// ==========================================
-// Snitch 2.0 — Index (Entry Point)
-// Redirects based on auth state
-// ==========================================
-
 import React, { useEffect } from 'react';
 import { View, ActivityIndicator, StyleSheet } from 'react-native';
 import { Redirect } from 'expo-router';
 import { useAuth } from '../context/AuthContext';
 import Colors from '../constants/colors';
-
 export default function Index() {
   const { isAuthenticated, isLoading } = useAuth();
-
   if (isLoading) {
     return (
       <View style={styles.container}>
@@ -19,14 +12,11 @@ export default function Index() {
       </View>
     );
   }
-
   if (isAuthenticated) {
     return <Redirect href="/(drawer)/(tabs)" />;
   }
-
   return <Redirect href="/(auth)/login" />;
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,

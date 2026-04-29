@@ -1,12 +1,6 @@
-// ==========================================
-// Snitch 2.0 — Cart Context (Context API)
-// Cart state + AsyncStorage persistence
-// ==========================================
-
 import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
 import { CartItem, Product, ProductColor } from '../types';
 import { storeData, getData, STORAGE_KEYS } from '../utils/storage';
-
 interface CartContextType {
   items: CartItem[];
   addToCart: (product: Product, size: string, color: ProductColor) => void;
@@ -17,13 +11,9 @@ interface CartContextType {
   getSubtotal: () => number;
   isInCart: (productId: string) => boolean;
 }
-
 const CartContext = createContext<CartContextType | undefined>(undefined);
-
 export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [items, setItems] = useState<CartItem[]>([]);
-
-  // Load cart from AsyncStorage on mount
   useEffect(() => {
     const loadCart = async () => {
       const savedCart = await getData<CartItem[]>(STORAGE_KEYS.CART);
@@ -33,12 +23,9 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     };
     loadCart();
   }, []);
-
-  // Save cart to AsyncStorage whenever it changes
   useEffect(() => {
     storeData(STORAGE_KEYS.CART, items);
   }, [items]);
-
   const addToCart = useCallback((product: Product, size: string, color: ProductColor) => {
     setItems(prev => {
       const existingIndex = prev.findIndex(
@@ -47,7 +34,6 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
           item.selectedSize === size &&
           item.selectedColor.name === color.name
       );
-
       if (existingIndex >= 0) {
         const updated = [...prev];
         updated[existingIndex] = {
@@ -56,15 +42,12 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         };
         return updated;
       }
-
       return [...prev, { product, quantity: 1, selectedSize: size, selectedColor: color }];
     });
   }, []);
-
   const removeFromCart = useCallback((productId: string) => {
     setItems(prev => prev.filter(item => item.product.id !== productId));
   }, []);
-
   const updateQuantity = useCallback((productId: string, quantity: number) => {
     if (quantity <= 0) {
       setItems(prev => prev.filter(item => item.product.id !== productId));
@@ -76,26 +59,21 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       )
     );
   }, []);
-
   const clearCart = useCallback(() => {
     setItems([]);
   }, []);
-
   const getItemCount = useCallback(() => {
     return items.reduce((total, item) => total + item.quantity, 0);
   }, [items]);
-
   const getSubtotal = useCallback(() => {
     return items.reduce((total, item) => total + item.product.price * item.quantity, 0);
   }, [items]);
-
   const isInCart = useCallback(
     (productId: string) => {
       return items.some(item => item.product.id === productId);
     },
     [items]
   );
-
   return (
     <CartContext.Provider
       value={{
@@ -113,7 +91,6 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     </CartContext.Provider>
   );
 };
-
 export const useCart = (): CartContextType => {
   const context = useContext(CartContext);
   if (!context) {
@@ -121,5 +98,4 @@ export const useCart = (): CartContextType => {
   }
   return context;
 };
-
 export default CartContext;

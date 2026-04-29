@@ -1,4 +1,3 @@
-// Snitch 2.0 — Profile Screen
 import React, { useCallback } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -6,17 +5,14 @@ import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { useAuth } from '../../../context/AuthContext';
 import Colors from '../../../constants/colors';
-
 export default function ProfileScreen() {
   const { user, logout, isAuthenticated } = useAuth();
-
   const handleLogout = useCallback(async () => {
     Alert.alert('Logout', 'Are you sure?', [
       { text: 'Cancel' },
       { text: 'Logout', style: 'destructive', onPress: async () => { await logout(); router.replace('/(auth)/login'); } },
     ]);
   }, [logout]);
-
   const menuItems = [
     { icon: 'receipt-outline', label: 'My Orders', onPress: () => router.push('/(drawer)/orders') },
     { icon: 'heart-outline', label: 'Wishlist', onPress: () => {} },
@@ -25,7 +21,6 @@ export default function ProfileScreen() {
     { icon: 'settings-outline', label: 'Settings', onPress: () => router.push('/(drawer)/settings') },
     { icon: 'help-circle-outline', label: 'Help & Support', onPress: () => {} },
   ];
-
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -68,7 +63,6 @@ export default function ProfileScreen() {
     </SafeAreaView>
   );
 }
-
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: Colors.surface },
   header: { paddingHorizontal: 16, paddingVertical: 12 },

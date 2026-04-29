@@ -1,7 +1,3 @@
-// ==========================================
-// Snitch 2.0 — Bottom Tab Navigator
-// ==========================================
-
 import React from 'react';
 import { StyleSheet, View, Platform } from 'react-native';
 import { Tabs } from 'expo-router';
@@ -9,11 +5,9 @@ import { Ionicons } from '@expo/vector-icons';
 import { useCart } from '../../../context/CartContext';
 import Badge from '../../../components/ui/Badge';
 import Colors from '../../../constants/colors';
-
 export default function TabLayout() {
   const { getItemCount } = useCart();
   const cartCount = getItemCount();
-
   return (
     <Tabs
       screenOptions={{
@@ -83,7 +77,6 @@ export default function TabLayout() {
     </Tabs>
   );
 }
-
 const styles = StyleSheet.create({
   tabBar: {
     backgroundColor: Colors.surface,

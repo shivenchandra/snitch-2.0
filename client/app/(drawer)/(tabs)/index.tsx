@@ -1,8 +1,3 @@
-// ==========================================
-// Snitch 2.0 — Home Screen
-// Banner, Categories, Product Grid
-// ==========================================
-
 import React, { useCallback, useMemo } from 'react';
 import {
   View,
@@ -27,38 +22,29 @@ import { PRODUCTS } from '../../../constants/products';
 import { Product } from '../../../types';
 import Colors from '../../../constants/colors';
 import Badge from '../../../components/ui/Badge';
-
 export default function HomeScreen() {
   const { user } = useAuth();
   const { getItemCount } = useCart();
   const navigation = useNavigation();
   const [refreshing, setRefreshing] = React.useState(false);
   const [activeCategory, setActiveCategory] = React.useState<string | null>(null);
-
   const handleProductPress = useCallback((product: Product) => {
     router.push(`/product/${product.id}`);
   }, []);
-
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     setTimeout(() => setRefreshing(false), 1500);
   }, []);
-
   const openDrawer = useCallback(() => {
     navigation.dispatch(DrawerActions.openDrawer());
   }, [navigation]);
-
   const handleCategorySelect = useCallback((categoryName: string) => {
-    // Toggle off if tapping the same category again
     setActiveCategory(prev => prev === categoryName ? null : categoryName);
   }, []);
-
-  // Memoized product data with category filtering
   const productData = useMemo(() => {
     if (!activeCategory) return PRODUCTS;
     return PRODUCTS.filter(p => p.category === activeCategory);
   }, [activeCategory]);
-
   const renderProductCard = useCallback(
     ({ item, index }: { item: Product; index: number }) => (
       <Animated.View entering={FadeInDown.delay(index * 80).duration(400)}>
@@ -67,14 +53,11 @@ export default function HomeScreen() {
     ),
     [handleProductPress]
   );
-
   const keyExtractor = useCallback((item: Product) => item.id, []);
-
-  // List header containing banner, categories, and section title
   const ListHeader = useMemo(
     () => (
       <View>
-        {/* Top Bar */}
+        {}
         <View style={styles.topBar}>
           <TouchableOpacity onPress={openDrawer} style={styles.menuButton}>
             <View style={styles.avatar}>
@@ -89,7 +72,6 @@ export default function HomeScreen() {
               <Text style={styles.location}>Welcome to Snitch</Text>
             </View>
           </TouchableOpacity>
-
           <View style={styles.topActions}>
             <TouchableOpacity 
               style={styles.iconButton}
@@ -108,17 +90,14 @@ export default function HomeScreen() {
             </TouchableOpacity>
           </View>
         </View>
-
-        {/* Banner Carousel */}
+        {}
         <BannerCarousel />
-
-        {/* Categories */}
+        {}
         <CategoryGrid 
           activeCategory={activeCategory} 
           onSelectCategory={handleCategorySelect} 
         />
-
-        {/* Section Title */}
+        {}
         <View style={styles.sectionHeader}>
           <Text style={styles.sectionTitle}>
             {activeCategory ? `${activeCategory}` : 'New arrivals'}
@@ -131,7 +110,6 @@ export default function HomeScreen() {
     ),
     [user, openDrawer, activeCategory, handleCategorySelect, getItemCount]
   );
-
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <FlatList
@@ -150,7 +128,6 @@ export default function HomeScreen() {
             tintColor={Colors.textPrimary}
           />
         }
-        // FlatList Optimization
         removeClippedSubviews={true}
         maxToRenderPerBatch={6}
         windowSize={5}
@@ -160,7 +137,6 @@ export default function HomeScreen() {
     </SafeAreaView>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,

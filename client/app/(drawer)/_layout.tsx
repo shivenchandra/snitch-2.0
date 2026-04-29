@@ -1,8 +1,3 @@
-// ==========================================
-// Snitch 2.0 — Drawer Navigation Layout
-// Custom drawer content with user info
-// ==========================================
-
 import React, { useCallback } from 'react';
 import {
   View,
@@ -21,19 +16,15 @@ import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { useAuth } from '../../context/AuthContext';
 import Colors from '../../constants/colors';
-
-// Custom Drawer Content
 function CustomDrawerContent(props: DrawerContentComponentProps) {
   const { user, logout, isAuthenticated, isAdmin } = useAuth();
-
   const handleLogout = useCallback(async () => {
     await logout();
     router.replace('/(auth)/login');
   }, [logout]);
-
   return (
     <DrawerContentScrollView {...props} style={styles.drawerContent}>
-      {/* User Header */}
+      {}
       <View style={styles.userHeader}>
         <View style={styles.avatar}>
           <Text style={styles.avatarText}>
@@ -49,11 +40,9 @@ function CustomDrawerContent(props: DrawerContentComponentProps) {
           </Text>
         </View>
       </View>
-
-      {/* Divider */}
+      {}
       <View style={styles.divider} />
-
-      {/* Navigation Items */}
+      {}
       <DrawerItem
         label="Home"
         icon={({ size }) => (
@@ -88,11 +77,9 @@ function CustomDrawerContent(props: DrawerContentComponentProps) {
           onPress={() => router.push('/(drawer)/admin')}
         />
       )}
-
-      {/* Divider */}
+      {}
       <View style={styles.divider} />
-
-      {/* Auth Action */}
+      {}
       {isAuthenticated ? (
         <DrawerItem
           label="Logout"
@@ -112,8 +99,7 @@ function CustomDrawerContent(props: DrawerContentComponentProps) {
           onPress={() => router.push('/(auth)/login')}
         />
       )}
-
-      {/* App Info */}
+      {}
       <View style={styles.footer}>
         <Text style={styles.footerText}>Snitch 2.0</Text>
         <Text style={styles.footerVersion}>Version 1.0.0</Text>
@@ -121,10 +107,8 @@ function CustomDrawerContent(props: DrawerContentComponentProps) {
     </DrawerContentScrollView>
   );
 }
-
 export default function DrawerLayout() {
   const { isAdmin } = useAuth();
-
   return (
     <Drawer
       drawerContent={(props) => <CustomDrawerContent {...props} />}
@@ -171,7 +155,6 @@ export default function DrawerLayout() {
     </Drawer>
   );
 }
-
 const styles = StyleSheet.create({
   drawerContent: {
     flex: 1,

@@ -1,7 +1,3 @@
-// ==========================================
-// Snitch 2.0 — Search Screen
-// ==========================================
-
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import {
   View,
@@ -23,24 +19,18 @@ import { useProducts } from '../hooks/useProducts';
 import { useCurrency } from '../context/CurrencyContext';
 import Colors from '../constants/colors';
 import { Product } from '../types';
-
 export default function SearchScreen() {
   const [query, setQuery] = useState('');
   const { products, loading } = useProducts();
   const { formatPrice } = useCurrency();
   const inputRef = useRef<TextInput>(null);
-
-  // Auto-focus input when screen opens
   useEffect(() => {
     setTimeout(() => {
       inputRef.current?.focus();
     }, 100);
   }, []);
-
-  // Filter products based on search query
   const filteredProducts = useMemo(() => {
     if (!query.trim()) return [];
-    
     const searchTerm = query.toLowerCase().trim();
     return products.filter((product) => 
       product.name.toLowerCase().includes(searchTerm) ||
@@ -48,7 +38,6 @@ export default function SearchScreen() {
       (product.description && product.description.toLowerCase().includes(searchTerm))
     );
   }, [query, products]);
-
   const renderProductItem = ({ item, index }: { item: Product; index: number }) => (
     <Animated.View entering={FadeInDown.delay(index * 50).duration(300)}>
       <TouchableOpacity 
@@ -70,15 +59,13 @@ export default function SearchScreen() {
       </TouchableOpacity>
     </Animated.View>
   );
-
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
-      {/* Search Header */}
+      {}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
           <Ionicons name="arrow-back" size={24} color={Colors.textPrimary} />
         </TouchableOpacity>
-        
         <View style={styles.searchBar}>
           <Ionicons name="search" size={20} color={Colors.textTertiary} style={styles.searchIcon} />
           <TextInput
@@ -99,8 +86,7 @@ export default function SearchScreen() {
           )}
         </View>
       </View>
-
-      {/* Main Content */}
+      {}
       <KeyboardAvoidingView 
         behavior={Platform.OS === 'ios' ? 'padding' : undefined} 
         style={styles.content}
@@ -140,7 +126,6 @@ export default function SearchScreen() {
     </SafeAreaView>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,

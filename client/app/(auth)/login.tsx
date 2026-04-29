@@ -1,8 +1,3 @@
-// ==========================================
-// Snitch 2.0 — Login Screen
-// Firebase Auth + Form Validation
-// ==========================================
-
 import React, { useState, useCallback } from 'react';
 import {
   View,
@@ -22,18 +17,15 @@ import Input from '../../components/ui/Input';
 import Button from '../../components/ui/Button';
 import { validateEmail, validatePassword } from '../../utils/validation';
 import Colors from '../../constants/colors';
-
 export default function LoginScreen() {
   const { login, isLoading, error, clearError } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
-
   const handleLogin = useCallback(async () => {
     clearError();
     const emailResult = validateEmail(email);
     const passwordResult = validatePassword(password);
-
     if (!emailResult.isValid || !passwordResult.isValid) {
       setErrors({
         email: emailResult.error,
@@ -41,7 +33,6 @@ export default function LoginScreen() {
       });
       return;
     }
-
     setErrors({});
     try {
       await login(email, password);
@@ -50,11 +41,9 @@ export default function LoginScreen() {
       Alert.alert('Login Failed', err.message || 'Please check your credentials');
     }
   }, [email, password, login, clearError]);
-
   const handleSkip = useCallback(() => {
     router.replace('/(drawer)/(tabs)');
   }, []);
-
   return (
     <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView
@@ -66,18 +55,16 @@ export default function LoginScreen() {
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
         >
-          {/* Header */}
+          {}
           <Animated.View entering={FadeInUp.delay(100).duration(600)} style={styles.header}>
             <Text style={styles.brand}>SNITCH</Text>
             <Text style={styles.brandSub}>2.0</Text>
           </Animated.View>
-
           <Animated.View entering={FadeInUp.delay(200).duration(600)}>
             <Text style={styles.title}>Welcome back</Text>
             <Text style={styles.subtitle}>Sign in to your account to continue shopping</Text>
           </Animated.View>
-
-          {/* Form */}
+          {}
           <Animated.View entering={FadeInDown.delay(300).duration(600)} style={styles.form}>
             <Input
               label="Email"
@@ -89,7 +76,6 @@ export default function LoginScreen() {
               onChangeText={setEmail}
               error={errors.email}
             />
-
             <Input
               label="Password"
               placeholder="Enter your password"
@@ -99,13 +85,10 @@ export default function LoginScreen() {
               onChangeText={setPassword}
               error={errors.password}
             />
-
             <TouchableOpacity style={styles.forgotButton}>
               <Text style={styles.forgotText}>Forgot password?</Text>
             </TouchableOpacity>
-
             {error && <Text style={styles.errorText}>{error}</Text>}
-
             <Button
               title="Sign In"
               onPress={handleLogin}
@@ -114,15 +97,13 @@ export default function LoginScreen() {
               style={styles.loginButton}
             />
           </Animated.View>
-
-          {/* Footer */}
+          {}
           <Animated.View entering={FadeInDown.delay(500).duration(600)} style={styles.footer}>
             <View style={styles.dividerRow}>
               <View style={styles.divider} />
               <Text style={styles.dividerText}>or</Text>
               <View style={styles.divider} />
             </View>
-
             <Button
               title="Skip for now"
               onPress={handleSkip}
@@ -130,7 +111,6 @@ export default function LoginScreen() {
               size="large"
               style={styles.skipButton}
             />
-
             <View style={styles.signupRow}>
               <Text style={styles.signupText}>Don't have an account? </Text>
               <TouchableOpacity onPress={() => router.push('/(auth)/signup')}>
@@ -143,7 +123,6 @@ export default function LoginScreen() {
     </SafeAreaView>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,

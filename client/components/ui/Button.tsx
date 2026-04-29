@@ -1,7 +1,3 @@
-// ==========================================
-// Snitch 2.0 — Custom Button Component
-// ==========================================
-
 import React from 'react';
 import {
   TouchableOpacity,
@@ -12,7 +8,6 @@ import {
   TextStyle,
 } from 'react-native';
 import Colors from '../../constants/colors';
-
 interface ButtonProps {
   title: string;
   onPress: () => void;
@@ -24,7 +19,6 @@ interface ButtonProps {
   textStyle?: TextStyle;
   icon?: React.ReactNode;
 }
-
 const Button: React.FC<ButtonProps> = ({
   title,
   onPress,
@@ -43,7 +37,6 @@ const Button: React.FC<ButtonProps> = ({
     disabled && styles.disabled,
     style,
   ];
-
   const textStyles = [
     styles.text,
     styles[`text_${variant}`],
@@ -51,7 +44,6 @@ const Button: React.FC<ButtonProps> = ({
     disabled && styles.textDisabled,
     textStyle,
   ];
-
   return (
     <TouchableOpacity
       style={buttonStyles}
@@ -73,7 +65,6 @@ const Button: React.FC<ButtonProps> = ({
     </TouchableOpacity>
   );
 };
-
 const styles = StyleSheet.create({
   base: {
     flexDirection: 'row',
@@ -140,5 +131,4 @@ const styles = StyleSheet.create({
     opacity: 0.7,
   },
 });
-
 export default Button;

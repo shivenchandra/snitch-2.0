@@ -1,8 +1,3 @@
-// ==========================================
-// Snitch 2.0 — Banner Carousel (Animated)
-// Uses Reanimated for smooth animations
-// ==========================================
-
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import {
   View,
@@ -22,17 +17,13 @@ import Animated, {
 } from 'react-native-reanimated';
 import { BANNER_SLIDES } from '../../constants/products';
 import Colors from '../../constants/colors';
-
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const BANNER_WIDTH = SCREEN_WIDTH - 32;
 const BANNER_HEIGHT = 180;
-
 const BannerCarousel: React.FC = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const scrollRef = useRef<ScrollView>(null);
   const activeValue = useSharedValue(0);
-
-  // Auto-scroll every 4 seconds
   useEffect(() => {
     const interval = setInterval(() => {
       const nextIndex = (activeIndex + 1) % BANNER_SLIDES.length;
@@ -40,10 +31,8 @@ const BannerCarousel: React.FC = () => {
       setActiveIndex(nextIndex);
       activeValue.value = nextIndex;
     }, 4000);
-
     return () => clearInterval(interval);
   }, [activeIndex]);
-
   const handleScroll = useCallback(
     (event: NativeSyntheticEvent<NativeScrollEvent>) => {
       const offsetX = event.nativeEvent.contentOffset.x;
@@ -55,7 +44,6 @@ const BannerCarousel: React.FC = () => {
     },
     [activeIndex]
   );
-
   return (
     <View style={styles.container}>
       <ScrollView
@@ -91,8 +79,7 @@ const BannerCarousel: React.FC = () => {
           </View>
         ))}
       </ScrollView>
-
-      {/* Pagination Dots */}
+      {}
       <View style={styles.pagination}>
         {BANNER_SLIDES.map((_, index) => {
           const dotStyle = useAnimatedStyle(() => {
@@ -102,7 +89,6 @@ const BannerCarousel: React.FC = () => {
               opacity: withSpring(isActive ? 1 : 0.3, { damping: 15 }),
             };
           });
-
           return (
             <Animated.View key={index} style={[styles.dot, dotStyle]} />
           );
@@ -111,7 +97,6 @@ const BannerCarousel: React.FC = () => {
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     marginBottom: 24,
@@ -174,5 +159,4 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.textPrimary,
   },
 });
-
 export default BannerCarousel;

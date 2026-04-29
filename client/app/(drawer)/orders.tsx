@@ -1,4 +1,3 @@
-// Snitch 2.0 — Orders Screen
 import React from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -6,20 +5,17 @@ import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { useCurrency } from '../../context/CurrencyContext';
 import Colors from '../../constants/colors';
-
 const MOCK_ORDERS = [
   { id: '1', date: 'Apr 28, 2026', total: 4797, status: 'Delivered', items: 3 },
   { id: '2', date: 'Apr 20, 2026', total: 1999, status: 'Shipped', items: 1 },
   { id: '3', date: 'Apr 12, 2026', total: 3398, status: 'Processing', items: 2 },
 ];
-
 const statusColors: Record<string, string> = {
   Delivered: '#10B981',
   Shipped: '#3B82F6',
   Processing: '#F59E0B',
   Pending: '#6B7280',
 };
-
 export default function OrdersScreen() {
   const { formatPrice } = useCurrency();
   return (
@@ -63,7 +59,6 @@ export default function OrdersScreen() {
     </SafeAreaView>
   );
 }
-
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: Colors.surface },
   header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16, paddingVertical: 12 },

@@ -1,16 +1,6 @@
-// ==========================================
-// Snitch 2.0 — Storage Utilities
-// AsyncStorage & SecureStore helpers
-// ==========================================
-
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as SecureStore from 'expo-secure-store';
 import { Platform } from 'react-native';
-
-// ==========================================
-// AsyncStorage Helpers (for non-sensitive data)
-// ==========================================
-
 export const storeData = async (key: string, value: any): Promise<void> => {
   try {
     const jsonValue = JSON.stringify(value);
@@ -19,7 +9,6 @@ export const storeData = async (key: string, value: any): Promise<void> => {
     console.error('Error storing data:', error);
   }
 };
-
 export const getData = async <T>(key: string): Promise<T | null> => {
   try {
     const jsonValue = await AsyncStorage.getItem(key);
@@ -29,7 +18,6 @@ export const getData = async <T>(key: string): Promise<T | null> => {
     return null;
   }
 };
-
 export const removeData = async (key: string): Promise<void> => {
   try {
     await AsyncStorage.removeItem(key);
@@ -37,15 +25,9 @@ export const removeData = async (key: string): Promise<void> => {
     console.error('Error removing data:', error);
   }
 };
-
-// ==========================================
-// Secure Storage Helpers (for sensitive data)
-// ==========================================
-
 export const secureStore = async (key: string, value: string): Promise<void> => {
   try {
     if (Platform.OS === 'web') {
-      // Fallback to localStorage on web
       localStorage.setItem(key, value);
     } else {
       await SecureStore.setItemAsync(key, value);
@@ -54,7 +36,6 @@ export const secureStore = async (key: string, value: string): Promise<void> => 
     console.error('Error in secure store:', error);
   }
 };
-
 export const secureGet = async (key: string): Promise<string | null> => {
   try {
     if (Platform.OS === 'web') {
@@ -66,7 +47,6 @@ export const secureGet = async (key: string): Promise<string | null> => {
     return null;
   }
 };
-
 export const secureRemove = async (key: string): Promise<void> => {
   try {
     if (Platform.OS === 'web') {
@@ -78,8 +58,6 @@ export const secureRemove = async (key: string): Promise<void> => {
     console.error('Error in secure remove:', error);
   }
 };
-
-// Storage Keys
 export const STORAGE_KEYS = {
   CART: '@snitch_cart',
   THEME: '@snitch_theme',

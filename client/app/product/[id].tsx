@@ -1,4 +1,3 @@
-// Snitch 2.0 — Product Detail Screen
 import React, { useState, useCallback } from 'react';
 import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, Dimensions, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -11,25 +10,20 @@ import { useCart } from '../../context/CartContext';
 import { useCurrency } from '../../context/CurrencyContext';
 import { PRODUCTS } from '../../constants/products';
 import Colors from '../../constants/colors';
-
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
-
 export default function ProductDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { addToCart } = useCart();
   const { formatPrice } = useCurrency();
   const product = PRODUCTS.find(p => p.id === id);
-
   const [selectedSize, setSelectedSize] = useState(product?.sizes[0] || '');
   const [selectedColor, setSelectedColor] = useState(product?.colors[0] || { name: '', hex: '' });
   const [isFavorite, setIsFavorite] = useState(false);
-
   const handleAddToCart = useCallback(() => {
     if (!product) return;
     addToCart(product, selectedSize, selectedColor);
     Alert.alert('Added to Cart! 🛍️', `${product.name} has been added.`);
   }, [product, selectedSize, selectedColor, addToCart]);
-
   if (!product) {
     return (
       <SafeAreaView style={styles.container}>
@@ -37,7 +31,6 @@ export default function ProductDetailScreen() {
       </SafeAreaView>
     );
   }
-
   return (
     <View style={styles.container}>
       <View style={styles.imageContainer}>
@@ -51,13 +44,11 @@ export default function ProductDetailScreen() {
           </TouchableOpacity>
         </SafeAreaView>
       </View>
-
       <ScrollView style={styles.detailsContainer} contentContainerStyle={styles.detailsContent} showsVerticalScrollIndicator={false}>
         <Animated.View entering={FadeInUp.delay(100).duration(500)}>
           <Text style={styles.productName}>{product.name}</Text>
           <Text style={styles.description}>{product.description}</Text>
         </Animated.View>
-
         {product.material && (
           <Animated.View entering={FadeInUp.delay(200).duration(500)} style={styles.infoRow}>
             {product.material && (
@@ -80,13 +71,11 @@ export default function ProductDetailScreen() {
             )}
           </Animated.View>
         )}
-
         <Animated.View entering={FadeInDown.delay(300).duration(500)}>
           <SizeSelector sizes={product.sizes} selectedSize={selectedSize} onSelect={setSelectedSize} />
           <ColorSelector colors={product.colors} selectedColor={selectedColor} onSelect={setSelectedColor} />
         </Animated.View>
       </ScrollView>
-
       <Animated.View entering={FadeInUp.delay(400).duration(500)} style={styles.footer}>
         <TouchableOpacity style={styles.addToCartButton} onPress={handleAddToCart} activeOpacity={0.9}>
           <Text style={styles.addToCartText}>Add to cart</Text>
@@ -96,7 +85,6 @@ export default function ProductDetailScreen() {
     </View>
   );
 }
-
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: Colors.surface },
   imageContainer: { width: SCREEN_WIDTH, height: SCREEN_WIDTH * 1.15, backgroundColor: Colors.surfaceLight },

@@ -1,4 +1,3 @@
-// Snitch 2.0 — Settings Screen
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Switch, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -6,15 +5,12 @@ import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { useCurrency } from '../../context/CurrencyContext';
 import Colors from '../../constants/colors';
-
 export default function SettingsScreen() {
   const { currencyCode, setCurrency } = useCurrency();
   const [notifications, setNotifications] = React.useState(true);
-
   const toggleCurrency = () => {
     setCurrency(currencyCode === 'USD' ? 'INR' : 'USD');
   };
-
   const settingsSections = [
     {
       title: 'Preferences',
@@ -33,7 +29,6 @@ export default function SettingsScreen() {
       ],
     },
   ];
-
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <View style={styles.header}>
@@ -79,7 +74,6 @@ export default function SettingsScreen() {
     </SafeAreaView>
   );
 }
-
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: Colors.surface },
   header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16, paddingVertical: 12 },

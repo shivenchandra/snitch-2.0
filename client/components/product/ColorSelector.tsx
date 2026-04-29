@@ -1,19 +1,13 @@
-// ==========================================
-// Snitch 2.0 — Color Selector
-// ==========================================
-
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { ProductColor } from '../../types';
 import Colors from '../../constants/colors';
-
 interface ColorSelectorProps {
   colors: ProductColor[];
   selectedColor: ProductColor;
   onSelect: (color: ProductColor) => void;
 }
-
 const ColorSelector: React.FC<ColorSelectorProps> = ({
   colors,
   selectedColor,
@@ -27,7 +21,6 @@ const ColorSelector: React.FC<ColorSelectorProps> = ({
           const isSelected = selectedColor.name === color.name;
           const isLight =
             color.hex === '#FFFFFF' || color.hex === '#F5F5F5';
-
           return (
             <TouchableOpacity
               key={color.name}
@@ -54,7 +47,6 @@ const ColorSelector: React.FC<ColorSelectorProps> = ({
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     marginBottom: 20,
@@ -86,5 +78,4 @@ const styles = StyleSheet.create({
     borderColor: Colors.textPrimary,
   },
 });
-
 export default ColorSelector;

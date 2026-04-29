@@ -1,7 +1,3 @@
-// ==========================================
-// Snitch 2.0 — Categories / Explore Screen
-// ==========================================
-
 import React, { useState, useCallback, useMemo } from 'react';
 import {
   View,
@@ -19,19 +15,14 @@ import ProductCard from '../../../components/home/ProductCard';
 import { PRODUCTS, CATEGORIES } from '../../../constants/products';
 import { Product } from '../../../types';
 import Colors from '../../../constants/colors';
-
 export default function CategoriesScreen() {
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState('');
-
-  // Memoized filtered products
   const filteredProducts = useMemo(() => {
     let products = PRODUCTS;
-
     if (selectedCategory !== 'All') {
       products = products.filter(p => p.category === selectedCategory);
     }
-
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
       products = products.filter(
@@ -40,19 +31,15 @@ export default function CategoriesScreen() {
           p.category.toLowerCase().includes(query)
       );
     }
-
     return products;
   }, [selectedCategory, searchQuery]);
-
   const handleProductPress = useCallback((product: Product) => {
     router.push(`/product/${product.id}`);
   }, []);
-
   const categories = useMemo(
     () => ['All', ...CATEGORIES.map(c => c.name)],
     []
   );
-
   const renderProductCard = useCallback(
     ({ item, index }: { item: Product; index: number }) => (
       <Animated.View entering={FadeInDown.delay(index * 60).duration(400)}>
@@ -61,17 +48,14 @@ export default function CategoriesScreen() {
     ),
     [handleProductPress]
   );
-
   const keyExtractor = useCallback((item: Product) => item.id, []);
-
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
-      {/* Header */}
+      {}
       <View style={styles.header}>
         <Text style={styles.title}>Explore</Text>
       </View>
-
-      {/* Search Bar */}
+      {}
       <View style={styles.searchContainer}>
         <Ionicons name="search-outline" size={20} color={Colors.textTertiary} />
         <TextInput
@@ -87,8 +71,7 @@ export default function CategoriesScreen() {
           </TouchableOpacity>
         )}
       </View>
-
-      {/* Category Filter Pills */}
+      {}
       <FlatList
         horizontal
         data={categories}
@@ -115,8 +98,7 @@ export default function CategoriesScreen() {
         contentContainerStyle={styles.filterRow}
         style={styles.filterContainer}
       />
-
-      {/* Product Grid */}
+      {}
       <FlatList
         data={filteredProducts}
         renderItem={renderProductCard}
@@ -131,7 +113,6 @@ export default function CategoriesScreen() {
             <Text style={styles.emptyText}>No products found</Text>
           </View>
         }
-        // FlatList Optimization
         removeClippedSubviews={true}
         maxToRenderPerBatch={6}
         windowSize={5}
@@ -139,7 +120,6 @@ export default function CategoriesScreen() {
     </SafeAreaView>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
