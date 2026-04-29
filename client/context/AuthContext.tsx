@@ -43,7 +43,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         if (storedToken) {
           // Firebase will handle re-authentication via onAuthStateChanged
         }
-      } catch (err) {
+      } catch (err: unknown) {
         console.error('Auth check error:', err);
       }
     };
@@ -74,8 +74,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const token = await userCredential.user.getIdToken();
       await secureStore(STORAGE_KEYS.USER_TOKEN, token);
-    } catch (err: any) {
-      const message = getAuthErrorMessage(err.code);
+    } catch (err: unknown) {
+      const errorObj = err as any;
+      const message = getAuthErrorMessage(errorObj?.code || '');
       setError(message);
       throw new Error(message);
     } finally {
@@ -97,8 +98,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         email: userCredential.user.email || '',
         displayName: name,
       });
-    } catch (err: any) {
-      const message = getAuthErrorMessage(err.code);
+    } catch (err: unknown) {
+      const errorObj = err as any;
+      const message = getAuthErrorMessage(errorObj?.code || '');
       setError(message);
       throw new Error(message);
     } finally {
@@ -111,7 +113,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       await signOut(auth);
       await secureRemove(STORAGE_KEYS.USER_TOKEN);
       setUser(null);
-    } catch (err: any) {
+    } catch (err: unknown) {
       setError('Failed to log out');
     }
   }, []);

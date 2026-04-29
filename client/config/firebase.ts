@@ -3,7 +3,7 @@
 // ==========================================
 
 import { initializeApp, getApps, getApp } from 'firebase/app';
-import { getAuth, initializeAuth, getReactNativePersistence } from 'firebase/auth';
+import { getAuth, initializeAuth, getReactNativePersistence, Auth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -20,15 +20,16 @@ const firebaseConfig = {
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 
 // Initialize Auth with AsyncStorage for React Native
-let auth;
-try {
-  auth = initializeAuth(app, {
-    persistence: getReactNativePersistence(AsyncStorage),
-  });
-} catch (e) {
-  // If auth is already initialized during hot reload, get the existing instance
-  auth = getAuth(app);
-}
+const auth: Auth = (() => {
+  try {
+    return initializeAuth(app, {
+      persistence: getReactNativePersistence(AsyncStorage),
+    });
+  } catch {
+    // If auth is already initialized during hot reload, get the existing instance
+    return getAuth(app);
+  }
+})();
 
 export { auth };
 export const db = getFirestore(app);
