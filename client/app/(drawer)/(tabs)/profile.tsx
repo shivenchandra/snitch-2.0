@@ -15,11 +15,11 @@ export default function ProfileScreen() {
   }, [logout]);
   const menuItems = [
     { icon: 'receipt-outline', label: 'My Orders', onPress: () => router.push('/(drawer)/orders') },
-    { icon: 'heart-outline', label: 'Wishlist', onPress: () => {} },
-    { icon: 'location-outline', label: 'Addresses', onPress: () => {} },
-    { icon: 'card-outline', label: 'Payment Methods', onPress: () => {} },
+    { icon: 'heart-outline', label: 'Wishlist', onPress: () => router.push('/(drawer)/wishlist') },
+    { icon: 'location-outline', label: 'Addresses', onPress: () => router.push('/(drawer)/addresses') },
+    { icon: 'card-outline', label: 'Payment Methods', onPress: () => router.push('/(drawer)/payment') },
     { icon: 'settings-outline', label: 'Settings', onPress: () => router.push('/(drawer)/settings') },
-    { icon: 'help-circle-outline', label: 'Help & Support', onPress: () => {} },
+    { icon: 'help-circle-outline', label: 'Help & Support', onPress: () => router.push('/(drawer)/help') },
   ];
   return (
     <SafeAreaView style={styles.container} edges={['top']}>

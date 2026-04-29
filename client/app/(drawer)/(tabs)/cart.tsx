@@ -2,26 +2,35 @@ import React, { useCallback } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
+import { router } from 'expo-router';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import CartItemComponent from '../../../components/cart/CartItem';
 import Button from '../../../components/ui/Button';
 import { useCart } from '../../../context/CartContext';
 import { useCurrency } from '../../../context/CurrencyContext';
+import { useAuth } from '../../../context/AuthContext';
+
 import { CartItem } from '../../../types';
 import Colors from '../../../constants/colors';
 export default function CartScreen() {
   const { items, getSubtotal, getItemCount, clearCart } = useCart();
   const { formatPrice } = useCurrency();
+  const { user } = useAuth();
   const subtotal = getSubtotal();
+
   const handleCheckout = useCallback(() => {
     if (items.length === 0) {
       Alert.alert('Cart Empty', 'Add some items first!');
       return;
     }
-    Alert.alert('Order Placed! 🎉', `Total: ${formatPrice(subtotal)}`, [
-      { text: 'OK', onPress: () => clearCart() },
-    ]);
-  }, [items, subtotal, clearCart, formatPrice]);
+    
+    if (!user) {
+      Alert.alert('Error', 'You must be logged in to checkout');
+      return;
+    }
+
+    router.push('/checkout');
+  }, [items, user]);
   const renderCartItem = useCallback(
     ({ item, index }: { item: CartItem; index: number }) => (
       <Animated.View entering={FadeInDown.delay(index * 80).duration(400)}>

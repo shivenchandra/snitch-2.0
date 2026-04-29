@@ -8,6 +8,7 @@ import SizeSelector from '../../components/product/SizeSelector';
 import ColorSelector from '../../components/product/ColorSelector';
 import { useCart } from '../../context/CartContext';
 import { useCurrency } from '../../context/CurrencyContext';
+import { useWishlist } from '../../context/WishlistContext';
 import { PRODUCTS } from '../../constants/products';
 import Colors from '../../constants/colors';
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
@@ -18,7 +19,8 @@ export default function ProductDetailScreen() {
   const product = PRODUCTS.find(p => p.id === id);
   const [selectedSize, setSelectedSize] = useState(product?.sizes[0] || '');
   const [selectedColor, setSelectedColor] = useState(product?.colors[0] || { name: '', hex: '' });
-  const [isFavorite, setIsFavorite] = useState(false);
+  const { isFavorite, toggleFavorite } = useWishlist();
+  const isFav = product ? isFavorite(product.id) : false;
   const handleAddToCart = useCallback(() => {
     if (!product) return;
     addToCart(product, selectedSize, selectedColor);
@@ -39,8 +41,8 @@ export default function ProductDetailScreen() {
           <TouchableOpacity style={styles.navButton} onPress={() => router.back()}>
             <Ionicons name="arrow-back" size={22} color={Colors.textPrimary} />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.navButton} onPress={() => setIsFavorite(!isFavorite)}>
-            <Ionicons name={isFavorite ? 'heart' : 'heart-outline'} size={22} color={isFavorite ? Colors.favorite : Colors.textPrimary} />
+          <TouchableOpacity style={styles.navButton} onPress={() => { if(product) toggleFavorite(product.id) }}>
+            <Ionicons name={isFav ? 'heart' : 'heart-outline'} size={22} color={isFav ? Colors.favorite : Colors.textPrimary} />
           </TouchableOpacity>
         </SafeAreaView>
       </View>

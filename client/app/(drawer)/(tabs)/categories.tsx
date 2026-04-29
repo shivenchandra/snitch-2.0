@@ -6,6 +6,7 @@ import {
   FlatList,
   TouchableOpacity,
   TextInput,
+  ScrollView,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -72,32 +73,33 @@ export default function CategoriesScreen() {
         )}
       </View>
       {}
-      <FlatList
-        horizontal
-        data={categories}
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            style={[
-              styles.filterPill,
-              selectedCategory === item && styles.filterPillActive,
-            ]}
-            onPress={() => setSelectedCategory(item)}
-          >
-            <Text
+      <View style={styles.filterContainer}>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.filterRow}
+        >
+          {categories.map((item) => (
+            <TouchableOpacity
+              key={item}
               style={[
-                styles.filterPillText,
-                selectedCategory === item && styles.filterPillTextActive,
+                styles.filterTab,
+                selectedCategory === item && styles.filterTabActive,
               ]}
+              onPress={() => setSelectedCategory(item)}
             >
-              {item}
-            </Text>
-          </TouchableOpacity>
-        )}
-        keyExtractor={item => item}
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.filterRow}
-        style={styles.filterContainer}
-      />
+              <Text
+                style={[
+                  styles.filterTabText,
+                  selectedCategory === item && styles.filterTabTextActive,
+                ]}
+              >
+                {item}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+      </View>
       {}
       <FlatList
         data={filteredProducts}
@@ -144,7 +146,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     height: 48,
     marginBottom: 16,
-    gap: 10,
+    gap: 12, // tweaked gap to force reload
   },
   searchInput: {
     flex: 1,
@@ -152,32 +154,31 @@ const styles = StyleSheet.create({
     color: Colors.textPrimary,
   },
   filterContainer: {
-    maxHeight: 44,
     marginBottom: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.surfaceLight,
   },
   filterRow: {
     paddingHorizontal: 16,
-    gap: 8,
+    gap: 24,
   },
-  filterPill: {
-    paddingHorizontal: 18,
-    paddingVertical: 8,
-    borderRadius: 20,
-    backgroundColor: Colors.surfaceLight,
-    borderWidth: 1,
+  filterTab: {
+    paddingVertical: 12,
+    borderBottomWidth: 2,
     borderColor: 'transparent',
+    marginBottom: -1,
   },
-  filterPillActive: {
-    backgroundColor: Colors.textPrimary,
+  filterTabActive: {
     borderColor: Colors.textPrimary,
   },
-  filterPillText: {
-    fontSize: 13,
-    fontWeight: '600',
+  filterTabText: {
+    fontSize: 15,
+    fontWeight: '500',
     color: Colors.textSecondary,
   },
-  filterPillTextActive: {
-    color: Colors.textWhite,
+  filterTabTextActive: {
+    fontWeight: '700',
+    color: Colors.textPrimary,
   },
   productRow: {
     paddingHorizontal: 16,

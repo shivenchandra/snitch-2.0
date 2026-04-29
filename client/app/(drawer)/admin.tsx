@@ -12,26 +12,41 @@ import {
   ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
+  Modal,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import { router } from 'expo-router';
+import { router, useFocusEffect } from 'expo-router';
 import {
   fetchProductsFromDB,
   addProductToDB,
   deleteProductFromDB,
   seedProducts,
 } from '../../services/productService';
+import { getAllOrders, updateOrderStatus } from '../../services/orderService';
 import { PRODUCTS } from '../../constants/products';
-import { Product } from '../../types';
+import { Product, Order } from '../../types';
 import Colors from '../../constants/colors';
 import { useCurrency } from '../../context/CurrencyContext';
-type Tab = 'products' | 'add';
+type Tab = 'products' | 'add' | 'orders';
+
+const statusColors: Record<string, string> = {
+  Delivered: '#10B981',
+  Shipped: '#3B82F6',
+  Processing: '#F59E0B',
+  Pending: '#6B7280',
+  Cancelled: '#EF4444',
+};
+
 export default function AdminScreen() {
   const [activeTab, setActiveTab] = useState<Tab>('products');
   const [products, setProducts] = useState<Product[]>([]);
+  const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [cancelModalVisible, setCancelModalVisible] = useState(false);
+  const [cancelReason, setCancelReason] = useState('');
+  const [orderToCancel, setOrderToCancel] = useState<string | null>(null);
   const { formatPrice } = useCurrency();
   const [name, setName] = useState('');
   const [price, setPrice] = useState('');
@@ -44,20 +59,27 @@ export default function AdminScreen() {
   const [isSale, setIsSale] = useState(false);
   const [isNew, setIsNew] = useState(false);
   const categories = ['Clothing', 'Shoes', 'Bags', 'Hats', 'Watches', 'Sunglasses'];
-  const loadProducts = useCallback(async () => {
+  const loadData = useCallback(async () => {
     setLoading(true);
     try {
-      const data = await fetchProductsFromDB();
-      setProducts(data);
+      const [productsData, ordersData] = await Promise.all([
+        fetchProductsFromDB(),
+        getAllOrders()
+      ]);
+      setProducts(productsData);
+      setOrders(ordersData);
     } catch (err) {
       console.error(err);
     } finally {
       setLoading(false);
     }
   }, []);
-  useEffect(() => {
-    loadProducts();
-  }, [loadProducts]);
+
+  useFocusEffect(
+    useCallback(() => {
+      loadData();
+    }, [loadData])
+  );
   const handleSeedData = useCallback(async () => {
     Alert.alert(
       'Seed Products',
@@ -71,7 +93,7 @@ export default function AdminScreen() {
             try {
               const productsWithoutId = PRODUCTS.map(({ id, ...rest }) => rest);
               await seedProducts(productsWithoutId);
-              await loadProducts();
+              await loadData();
               Alert.alert('Success', 'Mock products uploaded to Firestore!');
             } catch (err) {
               Alert.alert('Error', 'Failed to seed products');
@@ -82,7 +104,7 @@ export default function AdminScreen() {
         },
       ]
     );
-  }, [loadProducts]);
+  }, [loadData]);
   const handleAddProduct = useCallback(async () => {
     if (!name.trim() || !price.trim() || !description.trim()) {
       Alert.alert('Missing Fields', 'Please fill in name, price, and description');
@@ -117,13 +139,13 @@ export default function AdminScreen() {
       setIsSale(false);
       setIsNew(false);
       setActiveTab('products');
-      await loadProducts();
+      await loadData();
     } catch (err) {
       Alert.alert('Error', 'Failed to add product');
     } finally {
       setSaving(false);
     }
-  }, [name, price, originalPrice, description, category, imageUrl, material, sizes, isSale, isNew, loadProducts]);
+  }, [name, price, originalPrice, description, category, imageUrl, material, sizes, isSale, isNew, loadData]);
   const handleDelete = useCallback(
     (product: Product) => {
       Alert.alert('Delete Product', `Delete "${product.name}"?`, [
@@ -134,7 +156,7 @@ export default function AdminScreen() {
           onPress: async () => {
             try {
               await deleteProductFromDB(product.id);
-              await loadProducts();
+              await loadData();
             } catch (err) {
               Alert.alert('Error', 'Failed to delete product');
             }
@@ -142,8 +164,38 @@ export default function AdminScreen() {
         },
       ]);
     },
-    [loadProducts]
+    [loadData]
   );
+  const handleUpdateOrderStatus = useCallback((orderId: string, currentStatus: string) => {
+    Alert.alert('Update Status', `Current status is ${currentStatus}`, [
+      { text: 'Cancel', style: 'cancel' },
+      { text: 'Processing', onPress: async () => { await updateOrderStatus(orderId, 'Processing'); loadData(); } },
+      { text: 'Shipped', onPress: async () => { await updateOrderStatus(orderId, 'Shipped'); loadData(); } },
+      { text: 'Delivered', onPress: async () => { await updateOrderStatus(orderId, 'Delivered'); loadData(); } },
+      { text: 'Cancel Order', style: 'destructive', onPress: () => { setOrderToCancel(orderId); setCancelModalVisible(true); } },
+    ]);
+  }, [loadData]);
+
+  const submitCancelOrder = useCallback(async () => {
+    if (!orderToCancel) return;
+    if (!cancelReason.trim()) {
+      Alert.alert('Reason Required', 'You must provide a reason for cancellation.');
+      return;
+    }
+    setSaving(true);
+    try {
+      await updateOrderStatus(orderToCancel, 'Cancelled', cancelReason.trim());
+      setCancelModalVisible(false);
+      setCancelReason('');
+      setOrderToCancel(null);
+      await loadData();
+    } catch (error) {
+      Alert.alert('Error', 'Failed to cancel order.');
+    } finally {
+      setSaving(false);
+    }
+  }, [orderToCancel, cancelReason, loadData]);
+
   const renderProductItem = useCallback(
     ({ item }: { item: Product }) => (
       <View style={styles.productItem}>
@@ -159,6 +211,36 @@ export default function AdminScreen() {
       </View>
     ),
     [handleDelete, formatPrice]
+  );
+
+  const renderOrderItem = useCallback(
+    ({ item }: { item: Order }) => (
+      <View style={styles.orderCard}>
+        <View style={styles.orderTop}>
+          <View>
+            <Text style={styles.orderId}>Order #{item.id.slice(0,8).toUpperCase()}</Text>
+            <Text style={styles.orderCustomer}>{item.customerName} ({item.userEmail})</Text>
+          </View>
+          <TouchableOpacity 
+            style={[styles.statusBadge, { backgroundColor: statusColors[item.status] + '20' }]}
+            onPress={() => handleUpdateOrderStatus(item.id, item.status)}
+          >
+            <Text style={[styles.statusText, { color: statusColors[item.status] }]}>{item.status} ▾</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.orderDetails}>
+          <Text style={styles.orderDate}>{item.date}</Text>
+          <Text style={styles.orderItems}>{item.items?.length || 0} items • {formatPrice(item.total)}</Text>
+        </View>
+        {item.status === 'Cancelled' && item.cancelReason && (
+          <View style={styles.cancelReasonBox}>
+            <Ionicons name="information-circle-outline" size={16} color={Colors.error} />
+            <Text style={styles.cancelReasonText}>{item.cancelReason}</Text>
+          </View>
+        )}
+      </View>
+    ),
+    [formatPrice, handleUpdateOrderStatus]
   );
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
@@ -179,9 +261,14 @@ export default function AdminScreen() {
           onPress={() => setActiveTab('products')}
         >
           <Ionicons name="list-outline" size={18} color={activeTab === 'products' ? Colors.textWhite : Colors.textSecondary} />
-          <Text style={[styles.tabText, activeTab === 'products' && styles.tabTextActive]}>
-            Products ({products.length})
-          </Text>
+          <Text style={[styles.tabText, activeTab === 'products' && styles.tabTextActive]}>Products</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.tab, activeTab === 'orders' && styles.tabActive]}
+          onPress={() => setActiveTab('orders')}
+        >
+          <Ionicons name="receipt-outline" size={18} color={activeTab === 'orders' ? Colors.textWhite : Colors.textSecondary} />
+          <Text style={[styles.tabText, activeTab === 'orders' && styles.tabTextActive]}>Orders</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.tab, activeTab === 'add' && styles.tabActive]}
@@ -212,6 +299,21 @@ export default function AdminScreen() {
             <Text style={styles.emptyTitle}>No products in Firestore</Text>
             <Text style={styles.emptySub}>Tap the cloud icon to seed mock data, or add products manually</Text>
           </View>
+        )
+      ) : activeTab === 'orders' ? (
+        loading ? (
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color={Colors.textPrimary} />
+            <Text style={styles.loadingText}>Loading orders...</Text>
+          </View>
+        ) : (
+          <FlatList
+            data={orders}
+            keyExtractor={(item) => item.id}
+            renderItem={renderOrderItem}
+            contentContainerStyle={styles.listContent}
+            showsVerticalScrollIndicator={false}
+          />
         )
       ) : (
         <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1 }}>
@@ -275,6 +377,32 @@ export default function AdminScreen() {
           </ScrollView>
         </KeyboardAvoidingView>
       )}
+
+      {/* Cancel Reason Modal */}
+      <Modal visible={cancelModalVisible} transparent={true} animationType="fade">
+        <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Cancel Order</Text>
+            <Text style={styles.modalSub}>Please provide a reason for cancelling this order.</Text>
+            <TextInput
+              style={[styles.input, styles.modalInput]}
+              placeholder="e.g. Out of stock, Customer requested"
+              placeholderTextColor={Colors.textTertiary}
+              value={cancelReason}
+              onChangeText={setCancelReason}
+              autoFocus
+            />
+            <View style={styles.modalActions}>
+              <TouchableOpacity style={styles.modalCancelBtn} onPress={() => { setCancelModalVisible(false); setCancelReason(''); }}>
+                <Text style={styles.modalCancelText}>Go Back</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.modalSubmitBtn} onPress={submitCancelOrder} disabled={saving}>
+                {saving ? <ActivityIndicator color={Colors.textWhite} size="small" /> : <Text style={styles.modalSubmitText}>Confirm Cancel</Text>}
+              </TouchableOpacity>
+            </View>
+          </View>
+        </KeyboardAvoidingView>
+      </Modal>
     </SafeAreaView>
   );
 }
@@ -320,4 +448,25 @@ const styles = StyleSheet.create({
   toggleTextActive: { color: Colors.textPrimary },
   submitBtn: { marginTop: 24, backgroundColor: Colors.textPrimary, borderRadius: 16, paddingVertical: 18, alignItems: 'center' },
   submitText: { fontSize: 16, fontWeight: '700', color: Colors.textWhite },
+  orderCard: { backgroundColor: Colors.surfaceLight, borderRadius: 16, padding: 16, marginBottom: 12 },
+  orderTop: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 10 },
+  orderId: { fontSize: 16, fontWeight: '700', color: Colors.textPrimary, marginBottom: 2 },
+  orderCustomer: { fontSize: 12, color: Colors.textSecondary },
+  statusBadge: { paddingHorizontal: 12, paddingVertical: 6, borderRadius: 8 },
+  statusText: { fontSize: 12, fontWeight: '700' },
+  orderDetails: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 4 },
+  orderDate: { fontSize: 13, color: Colors.textSecondary },
+  orderItems: { fontSize: 13, fontWeight: '600', color: Colors.textPrimary },
+  cancelReasonBox: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#FEF2F2', padding: 8, borderRadius: 8, marginTop: 10, gap: 6 },
+  cancelReasonText: { fontSize: 12, color: Colors.error, flex: 1 },
+  modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', alignItems: 'center', padding: 20 },
+  modalContent: { width: '100%', backgroundColor: Colors.surface, borderRadius: 16, padding: 20, shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.1, shadowRadius: 12, elevation: 10 },
+  modalTitle: { fontSize: 18, fontWeight: '700', color: Colors.textPrimary, marginBottom: 8 },
+  modalSub: { fontSize: 14, color: Colors.textSecondary, marginBottom: 16 },
+  modalInput: { backgroundColor: Colors.surfaceLight, marginBottom: 20 },
+  modalActions: { flexDirection: 'row', gap: 12 },
+  modalCancelBtn: { flex: 1, paddingVertical: 14, borderRadius: 12, backgroundColor: Colors.surfaceLight, alignItems: 'center' },
+  modalCancelText: { fontSize: 15, fontWeight: '600', color: Colors.textSecondary },
+  modalSubmitBtn: { flex: 1, paddingVertical: 14, borderRadius: 12, backgroundColor: Colors.error, alignItems: 'center' },
+  modalSubmitText: { fontSize: 15, fontWeight: '600', color: Colors.textWhite },
 });

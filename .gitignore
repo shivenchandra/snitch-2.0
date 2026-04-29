@@ -5,6 +5,7 @@ node_modules/
 .env
 .env.local
 .env*.local
+firebase.ts
 
 # OS files
 .DS_Store
@@ -23,3 +24,6 @@ yarn-error.log*
 # Build outputs
 dist/
 build/
+
+# Extra
+Topics required for project impleme.txt

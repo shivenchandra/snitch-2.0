@@ -35,10 +35,16 @@ export interface User {
 }
 export interface Order {
   id: string;
+  userId: string;
+  userEmail: string;
+  customerName: string;
   items: CartItem[];
   total: number;
   date: string;
-  status: 'pending' | 'processing' | 'shipped' | 'delivered';
+  status: 'Processing' | 'Shipped' | 'Delivered' | 'Cancelled' | 'Pending'; // Pending kept for legacy mock data compatibility
+  cancelReason?: string;
+  shippingAddress?: Address;
+  paymentMethod?: PaymentMethod;
 }
 export interface Category {
   id: string;

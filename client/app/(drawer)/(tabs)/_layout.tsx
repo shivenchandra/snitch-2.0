@@ -17,6 +17,7 @@ export default function TabLayout() {
         tabBarInactiveTintColor: Colors.tabInactive,
         tabBarLabelStyle: styles.tabLabel,
         tabBarItemStyle: styles.tabItem,
+        animation: 'shift', // Adds smooth sliding animation between tabs
       }}
     >
       <Tabs.Screen

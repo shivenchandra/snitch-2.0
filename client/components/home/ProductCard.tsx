@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Image, TouchableOpacity, Dimensions } from 'rea
 import { Ionicons } from '@expo/vector-icons';
 import { Product } from '../../types';
 import { useCurrency } from '../../context/CurrencyContext';
+import { useWishlist } from '../../context/WishlistContext';
 import Colors from '../../constants/colors';
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const CARD_WIDTH = (SCREEN_WIDTH - 48) / 2;
@@ -12,11 +13,13 @@ interface ProductCardProps {
 }
 const ProductCard: React.FC<ProductCardProps> = React.memo(
   ({ product, onPress }) => {
-    const [isFavorite, setIsFavorite] = React.useState(false);
+    const { isFavorite, toggleFavorite } = useWishlist();
     const { formatPrice } = useCurrency();
+    const isFav = isFavorite(product.id);
+    
     const handleFavorite = useCallback(() => {
-      setIsFavorite(prev => !prev);
-    }, []);
+      toggleFavorite(product.id);
+    }, [toggleFavorite, product.id]);
     const handlePress = useCallback(() => {
       onPress(product);
     }, [product, onPress]);
@@ -25,7 +28,7 @@ const ProductCard: React.FC<ProductCardProps> = React.memo(
         <View style={styles.imageContainer}>
           <Image source={{ uri: product.image }} style={styles.image} resizeMode="cover" />
           <TouchableOpacity style={styles.favoriteButton} onPress={handleFavorite} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
-            <Ionicons name={isFavorite ? 'heart' : 'heart-outline'} size={20} color={isFavorite ? Colors.favorite : Colors.textSecondary} />
+            <Ionicons name={isFav ? 'heart' : 'heart-outline'} size={20} color={isFav ? Colors.favorite : Colors.textSecondary} />
           </TouchableOpacity>
           {product.isSale && (
             <View style={styles.saleBadge}><Text style={styles.saleBadgeText}>Sale</Text></View>

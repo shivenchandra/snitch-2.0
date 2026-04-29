@@ -55,16 +55,16 @@ export default function LoginScreen() {
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
         >
-          {}
+          { }
           <Animated.View entering={FadeInUp.delay(100).duration(600)} style={styles.header}>
             <Text style={styles.brand}>SNITCH</Text>
             <Text style={styles.brandSub}>2.0</Text>
           </Animated.View>
           <Animated.View entering={FadeInUp.delay(200).duration(600)}>
-            <Text style={styles.title}>Welcome back</Text>
+            <Text style={styles.title}>Welcome</Text>
             <Text style={styles.subtitle}>Sign in to your account to continue shopping</Text>
           </Animated.View>
-          {}
+          { }
           <Animated.View entering={FadeInDown.delay(300).duration(600)} style={styles.form}>
             <Input
               label="Email"
@@ -97,7 +97,7 @@ export default function LoginScreen() {
               style={styles.loginButton}
             />
           </Animated.View>
-          {}
+          { }
           <Animated.View entering={FadeInDown.delay(500).duration(600)} style={styles.footer}>
             <View style={styles.dividerRow}>
               <View style={styles.divider} />

@@ -18,7 +18,9 @@ import Animated, {
 import { BANNER_SLIDES } from '../../constants/products';
 import Colors from '../../constants/colors';
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
+const GAP = 16;
 const BANNER_WIDTH = SCREEN_WIDTH - 32;
+const ITEM_WIDTH = BANNER_WIDTH + GAP;
 const BANNER_HEIGHT = 180;
 const BannerCarousel: React.FC = () => {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -27,7 +29,7 @@ const BannerCarousel: React.FC = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       const nextIndex = (activeIndex + 1) % BANNER_SLIDES.length;
-      scrollRef.current?.scrollTo({ x: nextIndex * BANNER_WIDTH, animated: true });
+      scrollRef.current?.scrollTo({ x: nextIndex * ITEM_WIDTH, animated: true });
       setActiveIndex(nextIndex);
       activeValue.value = nextIndex;
     }, 4000);
@@ -36,7 +38,7 @@ const BannerCarousel: React.FC = () => {
   const handleScroll = useCallback(
     (event: NativeSyntheticEvent<NativeScrollEvent>) => {
       const offsetX = event.nativeEvent.contentOffset.x;
-      const index = Math.round(offsetX / BANNER_WIDTH);
+      const index = Math.round(offsetX / ITEM_WIDTH);
       if (index !== activeIndex && index >= 0 && index < BANNER_SLIDES.length) {
         setActiveIndex(index);
         activeValue.value = index;
@@ -54,13 +56,19 @@ const BannerCarousel: React.FC = () => {
         onScroll={handleScroll}
         scrollEventThrottle={16}
         decelerationRate="fast"
-        snapToInterval={BANNER_WIDTH}
+        snapToInterval={ITEM_WIDTH}
         contentContainerStyle={styles.scrollContent}
       >
         {BANNER_SLIDES.map((slide, index) => (
           <View
             key={slide.id}
-            style={[styles.slide, { backgroundColor: slide.backgroundColor }]}
+            style={[
+              styles.slide, 
+              { 
+                backgroundColor: slide.backgroundColor,
+                marginRight: index === BANNER_SLIDES.length - 1 ? 0 : GAP 
+              }
+            ]}
           >
             <View style={styles.slideContent}>
               {slide.tag && (
@@ -110,7 +118,6 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     flexDirection: 'row',
     overflow: 'hidden',
-    marginRight: 0,
   },
   slideContent: {
     flex: 1,

@@ -1,5 +1,7 @@
 import { initializeApp, getApps, getApp } from 'firebase/app';
-import { getAuth, initializeAuth, getReactNativePersistence, Auth } from 'firebase/auth';
+import { getAuth, initializeAuth, Auth } from 'firebase/auth';
+// @ts-ignore - Ignore TS error for missing export in some Firebase SDK definitions
+import { getReactNativePersistence } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 const firebaseConfig = {
