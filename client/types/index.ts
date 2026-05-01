@@ -33,6 +33,22 @@ export interface User {
   photoURL?: string;
   location?: string;
 }
+
+export interface Address {
+  id: string;
+  street: string;
+  city: string;
+  state: string;
+  zip: string;
+  isDefault: boolean;
+}
+
+export interface PaymentMethod {
+  id: string;
+  cardNumber: string;
+  expiry: string;
+  type: string;
+}
 export interface Order {
   id: string;
   userId: string;
