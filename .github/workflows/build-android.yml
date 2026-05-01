@@ -1,0 +1,83 @@
+name: Build Android APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'client/**'
+      - '.github/workflows/build-android.yml'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: client
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: client/package-lock.json
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Install Expo CLI & EAS CLI
+        run: npm install -g expo-cli eas-cli
+
+      - name: Run Expo Prebuild (generate native Android project)
+        run: npx expo prebuild --platform android --clean --non-interactive
+        env:
+          CI: true
+
+      - name: Make Gradlew executable
+        run: chmod +x android/gradlew
+
+      - name: Build Release APK
+        run: cd android && ./gradlew assembleRelease --no-daemon
+        env:
+          GRADLE_OPTS: '-Dorg.gradle.jvmargs=-Xmx4096m'
+
+      - name: Find APK
+        run: find android/app/build/outputs/apk -name "*.apk" -type f
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: snitch-release-apk
+          path: client/android/app/build/outputs/apk/release/*.apk
+          retention-days: 30
+
+      - name: Create GitHub Release
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ github.run_number }}
+          name: Snitch 2.0 - Build ${{ github.run_number }}
+          body: |
+            ## Snitch 2.0 Android APK
+
+            **Installation Instructions:**
+            1. Download the APK file below
+            2. On your Android device, go to Settings > Security > Enable "Unknown Sources"
+            3. Open the downloaded APK and install
+
+            Built from commit: ${{ github.sha }}
+          files: client/android/app/build/outputs/apk/release/*.apk
+          draft: false
