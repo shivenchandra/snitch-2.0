@@ -22,6 +22,17 @@ const GAP = 16;
 const BANNER_WIDTH = SCREEN_WIDTH - 32;
 const ITEM_WIDTH = BANNER_WIDTH + GAP;
 const BANNER_HEIGHT = 180;
+const DotIndicator = ({ index, activeIndex }: { index: number; activeIndex: number }) => {
+  const dotStyle = useAnimatedStyle(() => {
+    const isActive = activeIndex === index;
+    return {
+      width: withSpring(isActive ? 24 : 8, { damping: 15 }),
+      opacity: withSpring(isActive ? 1 : 0.3, { damping: 15 }),
+    };
+  });
+  return <Animated.View style={[styles.dot, dotStyle]} />;
+};
+
 const BannerCarousel: React.FC = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const scrollRef = useRef<ScrollView>(null);
@@ -89,18 +100,9 @@ const BannerCarousel: React.FC = () => {
       </ScrollView>
       {}
       <View style={styles.pagination}>
-        {BANNER_SLIDES.map((_, index) => {
-          const dotStyle = useAnimatedStyle(() => {
-            const isActive = activeIndex === index;
-            return {
-              width: withSpring(isActive ? 24 : 8, { damping: 15 }),
-              opacity: withSpring(isActive ? 1 : 0.3, { damping: 15 }),
-            };
-          });
-          return (
-            <Animated.View key={index} style={[styles.dot, dotStyle]} />
-          );
-        })}
+        {BANNER_SLIDES.map((_, index) => (
+          <DotIndicator key={index} index={index} activeIndex={activeIndex} />
+        ))}
       </View>
     </View>
   );
