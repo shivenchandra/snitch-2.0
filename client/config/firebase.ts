@@ -5,12 +5,12 @@ import { getReactNativePersistence } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 const firebaseConfig = {
-  apiKey: "AIzaSyBShAXGl3QOUGg-RcM3NXsmfxly6mhGUO8",
-  authDomain: "snitch-2.firebaseapp.com",
-  projectId: "snitch-2",
-  storageBucket: "snitch-2.firebasestorage.app",
-  messagingSenderId: "474118589191",
-  appId: "1:474118589191:web:734c1c3949e961167093a2"
+  apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.EXPO_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.EXPO_PUBLIC_FIREBASE_APP_ID
 };
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 const auth: Auth = (() => {
